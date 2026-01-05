@@ -20,24 +20,29 @@ export function parseServerUrl(url: string): { baseUrl: string; token: string } 
  */
 export function createServerSettings(baseUrl: string, token: string): ServerConnection.ISettings {
   // 如果使用代理，baseUrl 应该是相对路径
-  // 检查是否是 localhost，如果是则使用代理路径
+  // 检查是否是 localhost:8000（前端地址），如果是则使用代理路径指向 8889
   let finalBaseUrl = baseUrl;
   let wsUrl: string;
   
   try {
     const urlObj = new URL(baseUrl);
-    // 如果是 localhost，使用代理路径
-    if (urlObj.hostname === 'localhost' || urlObj.hostname === '127.0.0.1') {
-      finalBaseUrl = '/api';
-      // WebSocket 不能通过 HTTP 代理，需要直接连接到服务器
-      // 从 baseUrl 提取端口号
-      const port = urlObj.port || (urlObj.protocol === 'https:' ? '443' : '80');
-      // WebSocket URL 需要包含 token
-      const wsPath = urlObj.pathname || '/';
-      wsUrl = `ws://${urlObj.hostname}:${port}${wsPath}?token=${token}`;
-    } else {
+    // 如果是 localhost:8000（前端地址），使用代理路径
+    if ((urlObj.hostname === 'localhost' || urlObj.hostname === '127.0.0.1') && urlObj.port === '8000') {
+      // HTTP 请求通过代理 /api/ 到 localhost:8889
+      // Jupyter Server 的 API 路径是 /api，所以如果 baseUrl 设为 /api/，请求会是 /api/api/...（重复）
+      // 因此 baseUrl 应该设为 /，这样请求 /api/sessions 会被代理到 localhost:8889/api/sessions
+      finalBaseUrl = '/';
+      // WebSocket 不能通过 HTTP 代理，需要直接连接到真实服务器 localhost:8889
+      wsUrl = `ws://localhost:8889/?token=${token}`;
+    } else if (urlObj.hostname === 'localhost' || urlObj.hostname === '127.0.0.1') {
+      // 其他 localhost 地址（如 8889），直接使用
       finalBaseUrl = baseUrl;
-      // WebSocket URL 需要包含 token
+      const wsBase = baseUrl.replace(/^http/, 'ws').replace(/^https/, 'wss');
+      const separator = wsBase.includes('?') ? '&' : '?';
+      wsUrl = `${wsBase}${separator}token=${token}`;
+    } else {
+      // 远程服务器
+      finalBaseUrl = baseUrl;
       const wsBase = baseUrl.replace(/^http/, 'ws').replace(/^https/, 'wss');
       const separator = wsBase.includes('?') ? '&' : '?';
       wsUrl = `${wsBase}${separator}token=${token}`;
