@@ -1,13 +1,16 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { INotebookContent, ICell } from '@jupyterlab/nbformat';
 import { Button, Input, message } from 'antd';
-import { PlusOutlined, DeleteOutlined, SaveOutlined, EditOutlined, CheckOutlined, CloseOutlined } from '@ant-design/icons';
+import { PlusOutlined, DeleteOutlined, SaveOutlined, EditOutlined, CheckOutlined, CloseOutlined, PlayCircleOutlined, LinkOutlined, DisconnectOutlined } from '@ant-design/icons';
+import { Session } from '@jupyterlab/services';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeRaw from 'rehype-raw';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { saveNotebook } from '@/utils/notebook';
+import { createServerSettings, createKernelSession, executeCode, closeSession } from '@/utils/jupyter';
+import ServerConnectionDialog from '@/components/ServerConnectionDialog';
 import styles from './index.less';
 
 const { TextArea } = Input;
@@ -27,6 +30,10 @@ const NotebookEditor: React.FC<NotebookEditorProps> = ({
   const [editingCellIndex, setEditingCellIndex] = useState<number | null>(null);
   const [editingContent, setEditingContent] = useState<string>('');
   const [saving, setSaving] = useState(false);
+  const [session, setSession] = useState<Session.ISessionConnection | null>(null);
+  const [serverUrl, setServerUrl] = useState<string>('');
+  const [showServerDialog, setShowServerDialog] = useState(false);
+  const [executingCellIndex, setExecutingCellIndex] = useState<number | null>(null);
 
   // 创建新的 cell
   const createNewCell = (cellType: 'markdown' | 'code'): ICell => {
@@ -100,6 +107,94 @@ const NotebookEditor: React.FC<NotebookEditorProps> = ({
     setEditingCellIndex(null);
     setEditingContent('');
   };
+
+  // 连接 Jupyter Server
+  const handleConnectServer = async (baseUrl: string, token: string) => {
+    try {
+      console.log('Connecting to server:', { baseUrl, token });
+      const settings = createServerSettings(baseUrl, token);
+      console.log('Server settings created:', settings);
+      const newSession = await createKernelSession(settings);
+      console.log('Session created:', newSession);
+      setSession(newSession);
+      setServerUrl(`${baseUrl}?token=${token}`);
+      setShowServerDialog(false);
+      message.success('连接成功');
+    } catch (error) {
+      console.error('Connection error:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      message.error('连接失败: ' + errorMessage);
+      // 显示更详细的错误信息
+      if (error instanceof Error && error.stack) {
+        console.error('Error stack:', error.stack);
+      }
+    }
+  };
+
+  // 断开连接
+  const handleDisconnectServer = async () => {
+    if (session) {
+      try {
+        await closeSession(session);
+        setSession(null);
+        setServerUrl('');
+        message.success('已断开连接');
+      } catch (error) {
+        message.error('断开连接失败: ' + (error instanceof Error ? error.message : 'Unknown error'));
+      }
+    }
+  };
+
+  // 执行 code cell
+  const executeCell = async (index: number) => {
+    if (!session) {
+      message.warning('请先连接 Jupyter Server');
+      setShowServerDialog(true);
+      return;
+    }
+
+    const cell = notebook.cells?.[index];
+    if (!cell || cell.cell_type !== 'code') {
+      return;
+    }
+
+    const source = Array.isArray(cell.source) 
+      ? cell.source.join('') 
+      : cell.source || '';
+
+    if (!source.trim()) {
+      message.warning('代码为空');
+      return;
+    }
+
+    try {
+      setExecutingCellIndex(index);
+      const { outputs, execution_count } = await executeCode(session, source);
+      
+      // 更新 cell 的输出和执行计数
+      const newCells = [...(notebook.cells || [])];
+      const updatedCell = { ...newCells[index] };
+      updatedCell.outputs = outputs;
+      updatedCell.execution_count = execution_count;
+      newCells[index] = updatedCell;
+      setNotebook({ ...notebook, cells: newCells });
+      
+      message.success('执行成功');
+    } catch (error) {
+      message.error('执行失败: ' + (error instanceof Error ? error.message : 'Unknown error'));
+    } finally {
+      setExecutingCellIndex(null);
+    }
+  };
+
+  // 清理：组件卸载时关闭会话
+  useEffect(() => {
+    return () => {
+      if (session) {
+        closeSession(session).catch(console.error);
+      }
+    };
+  }, [session]);
 
   // 保存 notebook
   const handleSave = async () => {
@@ -241,12 +336,26 @@ const NotebookEditor: React.FC<NotebookEditorProps> = ({
       const language = cell.metadata?.language 
         ? (typeof cell.metadata.language === 'string' ? cell.metadata.language : 'python')
         : 'python';
+      const isExecuting = executingCellIndex === index;
 
       return (
         <div key={index} className={styles.cell} data-cell-type="code">
           <div className={styles.cellToolbar}>
-            <span className={styles.cellType}>Code</span>
+            <span className={styles.cellType}>
+              Code {cell.execution_count !== null && cell.execution_count !== undefined ? `[${cell.execution_count}]` : ''}
+            </span>
             <div className={styles.cellActions}>
+              <Button
+                type="text"
+                size="small"
+                icon={<PlayCircleOutlined />}
+                onClick={() => executeCell(index)}
+                loading={isExecuting}
+                disabled={isExecuting}
+                title="执行代码"
+              >
+                执行
+              </Button>
               <Button
                 type="text"
                 size="small"
@@ -400,14 +509,37 @@ const NotebookEditor: React.FC<NotebookEditorProps> = ({
   return (
     <div className={styles.notebookContainer}>
       <div className={styles.toolbar}>
-        <Button
-          type="primary"
-          icon={<SaveOutlined />}
-          onClick={handleSave}
-          loading={saving}
-        >
-          保存
-        </Button>
+        <div className={styles.toolbarLeft}>
+          <Button
+            type="primary"
+            icon={<SaveOutlined />}
+            onClick={handleSave}
+            loading={saving}
+          >
+            保存
+          </Button>
+          {session ? (
+            <Button
+              icon={<DisconnectOutlined />}
+              onClick={handleDisconnectServer}
+              danger
+            >
+              断开连接
+            </Button>
+          ) : (
+            <Button
+              icon={<LinkOutlined />}
+              onClick={() => setShowServerDialog(true)}
+            >
+              连接 Server
+            </Button>
+          )}
+          {session && (
+            <span className={styles.serverStatus}>
+              已连接: {serverUrl.split('?')[0]}
+            </span>
+          )}
+        </div>
         <div className={styles.toolbarActions}>
           <Button
             icon={<PlusOutlined />}
@@ -431,6 +563,12 @@ const NotebookEditor: React.FC<NotebookEditorProps> = ({
           </div>
         )}
       </div>
+      <ServerConnectionDialog
+        visible={showServerDialog}
+        onOk={handleConnectServer}
+        onCancel={() => setShowServerDialog(false)}
+        defaultUrl="http://localhost:8000/?token=08be6e0880fbf94764d60b37acce1fd7c3da925f58f5dba1"
+      />
     </div>
   );
 };
