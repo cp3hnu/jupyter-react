@@ -2,11 +2,12 @@
   "private": true,
   "author": "cp3hnu <cp3hnu@gmail.com>",
   "scripts": {
-    "dev": "max dev",
     "build": "max build",
+    "dev": "max dev",
     "format": "prettier --cache --write .",
-    "prepare": "husky",
     "postinstall": "max setup",
+    "lint": "es",
+    "prepare": "husky",
     "setup": "max setup",
     "start": "npm run dev"
   },

@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import { PageContainer } from '@ant-design/pro-components';
-import { Spin } from 'antd';
-import { INotebookContent } from '@jupyterlab/nbformat';
 import NotebookEditor from '@/components/NotebookEditor';
 import { loadNotebook, saveNotebook } from '@/utils/notebook';
+import { PageContainer } from '@ant-design/pro-components';
+import { INotebookContent } from '@jupyterlab/nbformat';
+import { Spin } from 'antd';
+import React, { useEffect, useState } from 'react';
 import styles from './index.less';
 
 const HomePage: React.FC = () => {
@@ -19,7 +19,9 @@ const HomePage: React.FC = () => {
         const data = await loadNotebook('/data/article.ipynb');
         setNotebook(data);
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to load notebook');
+        setError(
+          err instanceof Error ? err.message : 'Failed to load notebook',
+        );
       } finally {
         setLoading(false);
       }
@@ -49,8 +51,8 @@ const HomePage: React.FC = () => {
           </div>
         )}
         {notebook && (
-          <NotebookEditor 
-            notebook={notebook} 
+          <NotebookEditor
+            notebook={notebook}
             onSave={handleSave}
             notebookPath="/data/article.ipynb"
           />

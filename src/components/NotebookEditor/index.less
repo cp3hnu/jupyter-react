@@ -14,19 +14,19 @@
   border-radius: 4px;
   margin-bottom: 20px;
   border: 1px solid #e0e0e0;
-  
+
   .toolbarLeft {
     display: flex;
     align-items: center;
     gap: 8px;
   }
-  
+
   .serverStatus {
     font-size: 12px;
     color: #52c41a;
     margin-left: 8px;
   }
-  
+
   .toolbarActions {
     display: flex;
     gap: 8px;
@@ -45,16 +45,16 @@
   border-radius: 4px;
   overflow: hidden;
   transition: border-color 0.2s;
-  
+
   &:hover {
     border-color: #1890ff;
   }
-  
-  &[data-cell-type="markdown"] {
+
+  &[data-cell-type='markdown'] {
     background: #fff;
   }
-  
-  &[data-cell-type="code"] {
+
+  &[data-cell-type='code'] {
     background: #fafafa;
   }
 }
@@ -66,18 +66,18 @@
   padding: 8px 12px;
   background: #fafafa;
   border-bottom: 1px solid #e0e0e0;
-  
+
   .cellType {
     font-size: 12px;
     color: #666;
     font-weight: 500;
   }
-  
+
   .cellActions {
     display: flex;
     gap: 4px;
     align-items: center;
-    
+
     :global(.ant-btn) {
       padding: 0 8px;
       height: 24px;
@@ -92,57 +92,64 @@
 .cellContent {
   padding: 16px;
   cursor: pointer;
-  
+
   &:hover {
     background: #f9f9f9;
   }
-  
+
   :global {
-    h1, h2, h3, h4, h5, h6 {
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
       margin-top: 0;
       margin-bottom: 16px;
       font-weight: 600;
     }
-    
+
     h1 {
       font-size: 2em;
       border-bottom: 1px solid #eaecef;
       padding-bottom: 0.3em;
     }
-    
+
     h2 {
       font-size: 1.5em;
       border-bottom: 1px solid #eaecef;
       padding-bottom: 0.3em;
     }
-    
+
     h3 {
       font-size: 1.25em;
     }
-    
+
     p {
       margin-bottom: 16px;
       line-height: 1.6;
     }
-    
-    ul, ol {
+
+    ul,
+    ol {
       margin-bottom: 16px;
       padding-left: 2em;
     }
-    
+
     li {
       margin-bottom: 0.25em;
     }
-    
+
     code {
       background-color: rgba(27, 31, 35, 5%);
       border-radius: 3px;
       font-size: 85%;
       margin: 0;
       padding: 0.2em 0.4em;
-      font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+      font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, Courier,
+        monospace;
     }
-    
+
     pre {
       background-color: #f6f8fa;
       border-radius: 3px;
@@ -151,26 +158,24 @@
       overflow: auto;
       padding: 16px;
       margin-bottom: 16px;
-      
+
       code {
         background-color: transparent;
         border: 0;
         display: inline;
         line-height: inherit;
-        margin: 0;
-        overflow: visible;
         padding: 0;
         word-wrap: normal;
       }
     }
-    
+
     blockquote {
       border-left: 4px solid #dfe2e5;
       color: #6a737d;
       padding: 0 1em;
       margin-bottom: 16px;
     }
-    
+
     img {
       max-width: 100%;
       height: auto;
@@ -178,33 +183,33 @@
       display: inline-block;
       vertical-align: middle;
     }
-    
+
     p img {
       display: inline;
-      margin: 0 4px;
     }
-    
+
     table {
       border-collapse: collapse;
       border-spacing: 0;
       width: 100%;
       margin-bottom: 16px;
-      
-      th, td {
+
+      th,
+      td {
         border: 1px solid #dfe2e5;
         padding: 6px 13px;
       }
-      
+
       th {
         background-color: #f6f8fa;
         font-weight: 600;
       }
     }
-    
+
     a {
       color: #0366d6;
       text-decoration: none;
-      
+
       &:hover {
         text-decoration: underline;
       }
@@ -214,12 +219,13 @@
 
 .cellEditor {
   padding: 16px;
-  
+
   .textArea {
-    font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+    font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, Courier,
+      monospace;
     font-size: 14px;
   }
-  
+
   .editHint {
     margin-top: 8px;
     font-size: 12px;
@@ -231,7 +237,7 @@
 .codeInput {
   border-bottom: 1px solid #e0e0e0;
   cursor: pointer;
-  
+
   &:hover {
     background: #f0f0f0;
   }
@@ -248,11 +254,12 @@
   padding: 8px;
   background: #f6f8fa;
   border-radius: 4px;
-  font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+  font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, Courier,
+    monospace;
   font-size: 13px;
   line-height: 1.45;
   overflow-x: auto;
-  
+
   code {
     background: transparent;
     padding: 0;
@@ -263,7 +270,7 @@
 
 .htmlOutput {
   margin: 0;
-  
+
   :global {
     img {
       max-width: 100%;
@@ -274,7 +281,7 @@
 
 .imageOutput {
   margin: 8px 0;
-  
+
   img {
     max-width: 100%;
     height: auto;
@@ -288,12 +295,13 @@
   background: #fff5f5;
   border-left: 4px solid #f56565;
   border-radius: 4px;
-  font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+  font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, Courier,
+    monospace;
   font-size: 13px;
   line-height: 1.45;
   overflow-x: auto;
   color: #c53030;
-  
+
   code {
     background: transparent;
     padding: 0;
@@ -310,4 +318,3 @@
   border-radius: 4px;
   border: 1px dashed #e0e0e0;
 }
-

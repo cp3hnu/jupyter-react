@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { Modal, Input, Form, message } from 'antd';
 import { parseServerUrl } from '@/utils/jupyter';
+import { Form, Input, message, Modal } from 'antd';
+import React, { useState } from 'react';
 
 interface ServerConnectionDialogProps {
   visible: boolean;
@@ -22,7 +22,7 @@ const ServerConnectionDialog: React.FC<ServerConnectionDialogProps> = ({
     try {
       const values = await form.validateFields();
       const url = values.url.trim();
-      
+
       if (!url) {
         message.error('请输入服务器地址');
         return;
@@ -33,7 +33,10 @@ const ServerConnectionDialog: React.FC<ServerConnectionDialogProps> = ({
       onOk(baseUrl, token);
       form.resetFields();
     } catch (error) {
-      if (error instanceof Error && error.message !== 'Invalid server URL format') {
+      if (
+        error instanceof Error &&
+        error.message !== 'Invalid server URL format'
+      ) {
         message.error(error.message);
       }
     } finally {
@@ -56,11 +59,7 @@ const ServerConnectionDialog: React.FC<ServerConnectionDialogProps> = ({
       okText="连接"
       cancelText="取消"
     >
-      <Form
-        form={form}
-        layout="vertical"
-        initialValues={{ url: defaultUrl }}
-      >
+      <Form form={form} layout="vertical" initialValues={{ url: defaultUrl }}>
         <Form.Item
           name="url"
           label="服务器地址"
@@ -91,4 +90,3 @@ const ServerConnectionDialog: React.FC<ServerConnectionDialogProps> = ({
 };
 
 export default ServerConnectionDialog;
-

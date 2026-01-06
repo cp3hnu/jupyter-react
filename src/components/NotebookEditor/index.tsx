@@ -1,16 +1,31 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { INotebookContent, ICell } from '@jupyterlab/nbformat';
-import { Button, Input, message } from 'antd';
-import { PlusOutlined, DeleteOutlined, SaveOutlined, EditOutlined, CheckOutlined, CloseOutlined, PlayCircleOutlined, LinkOutlined, DisconnectOutlined } from '@ant-design/icons';
+import ServerConnectionDialog from '@/components/ServerConnectionDialog';
+import {
+  closeSession,
+  createKernelSession,
+  createServerSettings,
+  executeCode,
+} from '@/utils/jupyter';
+import { saveNotebook } from '@/utils/notebook';
+import {
+  CheckOutlined,
+  CloseOutlined,
+  DeleteOutlined,
+  DisconnectOutlined,
+  EditOutlined,
+  LinkOutlined,
+  PlayCircleOutlined,
+  PlusOutlined,
+  SaveOutlined,
+} from '@ant-design/icons';
+import { ICell, INotebookContent } from '@jupyterlab/nbformat';
 import { Session } from '@jupyterlab/services';
+import { Button, Input, message } from 'antd';
+import React, { useEffect, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
-import rehypeRaw from 'rehype-raw';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
-import { saveNotebook } from '@/utils/notebook';
-import { createServerSettings, createKernelSession, executeCode, closeSession } from '@/utils/jupyter';
-import ServerConnectionDialog from '@/components/ServerConnectionDialog';
+import rehypeRaw from 'rehype-raw';
+import remarkGfm from 'remark-gfm';
 import styles from './index.less';
 
 const { TextArea } = Input;
@@ -21,19 +36,23 @@ interface NotebookEditorProps {
   notebookPath?: string;
 }
 
-const NotebookEditor: React.FC<NotebookEditorProps> = ({ 
-  notebook: initialNotebook, 
+const NotebookEditor: React.FC<NotebookEditorProps> = ({
+  notebook: initialNotebook,
   onSave,
-  notebookPath = '/data/article.ipynb'
+  notebookPath = '/data/article.ipynb',
 }) => {
   const [notebook, setNotebook] = useState<INotebookContent>(initialNotebook);
   const [editingCellIndex, setEditingCellIndex] = useState<number | null>(null);
   const [editingContent, setEditingContent] = useState<string>('');
   const [saving, setSaving] = useState(false);
-  const [session, setSession] = useState<Session.ISessionConnection | null>(null);
+  const [session, setSession] = useState<Session.ISessionConnection | null>(
+    null,
+  );
   const [serverUrl, setServerUrl] = useState<string>('');
   const [showServerDialog, setShowServerDialog] = useState(false);
-  const [executingCellIndex, setExecutingCellIndex] = useState<number | null>(null);
+  const [executingCellIndex, setExecutingCellIndex] = useState<number | null>(
+    null,
+  );
 
   // 创建新的 cell
   const createNewCell = (cellType: 'markdown' | 'code'): ICell => {
@@ -72,8 +91,8 @@ const NotebookEditor: React.FC<NotebookEditorProps> = ({
   const startEdit = (index: number) => {
     const cell = notebook.cells?.[index];
     if (cell) {
-      const source = Array.isArray(cell.source) 
-        ? cell.source.join('') 
+      const source = Array.isArray(cell.source)
+        ? cell.source.join('')
         : cell.source || '';
       setEditingCellIndex(index);
       setEditingContent(source);
@@ -91,6 +110,12 @@ const NotebookEditor: React.FC<NotebookEditorProps> = ({
     setEditingContent('');
   };
 
+  // 取消编辑
+  const cancelEdit = () => {
+    setEditingCellIndex(null);
+    setEditingContent('');
+  };
+
   // 处理键盘事件
   const handleKeyDown = (e: React.KeyboardEvent, index: number) => {
     if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
@@ -100,12 +125,6 @@ const NotebookEditor: React.FC<NotebookEditorProps> = ({
       e.preventDefault();
       cancelEdit();
     }
-  };
-
-  // 取消编辑
-  const cancelEdit = () => {
-    setEditingCellIndex(null);
-    setEditingContent('');
   };
 
   // 连接 Jupyter Server
@@ -122,7 +141,8 @@ const NotebookEditor: React.FC<NotebookEditorProps> = ({
       message.success('连接成功');
     } catch (error) {
       console.error('Connection error:', error);
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      const errorMessage =
+        error instanceof Error ? error.message : 'Unknown error';
       message.error('连接失败: ' + errorMessage);
       // 显示更详细的错误信息
       if (error instanceof Error && error.stack) {
@@ -140,7 +160,10 @@ const NotebookEditor: React.FC<NotebookEditorProps> = ({
         setServerUrl('');
         message.success('已断开连接');
       } catch (error) {
-        message.error('断开连接失败: ' + (error instanceof Error ? error.message : 'Unknown error'));
+        message.error(
+          '断开连接失败: ' +
+            (error instanceof Error ? error.message : 'Unknown error'),
+        );
       }
     }
   };
@@ -158,8 +181,8 @@ const NotebookEditor: React.FC<NotebookEditorProps> = ({
       return;
     }
 
-    const source = Array.isArray(cell.source) 
-      ? cell.source.join('') 
+    const source = Array.isArray(cell.source)
+      ? cell.source.join('')
       : cell.source || '';
 
     if (!source.trim()) {
@@ -170,7 +193,7 @@ const NotebookEditor: React.FC<NotebookEditorProps> = ({
     try {
       setExecutingCellIndex(index);
       const { outputs, execution_count } = await executeCode(session, source);
-      
+
       // 更新 cell 的输出和执行计数
       const newCells = [...(notebook.cells || [])];
       const updatedCell = { ...newCells[index] };
@@ -178,10 +201,13 @@ const NotebookEditor: React.FC<NotebookEditorProps> = ({
       updatedCell.execution_count = execution_count;
       newCells[index] = updatedCell;
       setNotebook({ ...notebook, cells: newCells });
-      
+
       message.success('执行成功');
     } catch (error) {
-      message.error('执行失败: ' + (error instanceof Error ? error.message : 'Unknown error'));
+      message.error(
+        '执行失败: ' +
+          (error instanceof Error ? error.message : 'Unknown error'),
+      );
     } finally {
       setExecutingCellIndex(null);
     }
@@ -207,7 +233,10 @@ const NotebookEditor: React.FC<NotebookEditorProps> = ({
       }
       message.success('保存成功');
     } catch (error) {
-      message.error('保存失败: ' + (error instanceof Error ? error.message : 'Unknown error'));
+      message.error(
+        '保存失败: ' +
+          (error instanceof Error ? error.message : 'Unknown error'),
+      );
     } finally {
       setSaving(false);
     }
@@ -216,15 +245,21 @@ const NotebookEditor: React.FC<NotebookEditorProps> = ({
   // 渲染 cell
   const renderCell = (cell: ICell, index: number) => {
     const isEditing = editingCellIndex === index;
-    const source = Array.isArray(cell.source) 
-      ? cell.source.join('') 
+    const source = Array.isArray(cell.source)
+      ? cell.source.join('')
       : cell.source || '';
 
     if (isEditing) {
       return (
-        <div key={index} className={styles.cell} data-cell-type={cell.cell_type}>
+        <div
+          key={index}
+          className={styles.cell}
+          data-cell-type={cell.cell_type}
+        >
           <div className={styles.cellToolbar}>
-            <span className={styles.cellType}>{cell.cell_type === 'markdown' ? 'Markdown' : 'Code'}</span>
+            <span className={styles.cellType}>
+              {cell.cell_type === 'markdown' ? 'Markdown' : 'Code'}
+            </span>
             <div className={styles.cellActions}>
               <Button
                 type="text"
@@ -253,9 +288,7 @@ const NotebookEditor: React.FC<NotebookEditorProps> = ({
               className={styles.textArea}
               autoFocus
             />
-            <div className={styles.editHint}>
-              按 Ctrl+Enter 保存，Esc 取消
-            </div>
+            <div className={styles.editHint}>按 Ctrl+Enter 保存，Esc 取消</div>
           </div>
         </div>
       );
@@ -316,11 +349,11 @@ const NotebookEditor: React.FC<NotebookEditorProps> = ({
               />
             </div>
           </div>
-          <div 
+          <div
             className={styles.cellContent}
             onDoubleClick={() => startEdit(index)}
           >
-            <ReactMarkdown 
+            <ReactMarkdown
               remarkPlugins={[remarkGfm]}
               rehypePlugins={[rehypeRaw]}
             >
@@ -333,8 +366,10 @@ const NotebookEditor: React.FC<NotebookEditorProps> = ({
 
     if (cell.cell_type === 'code') {
       const outputs = (cell.outputs || []) as any[];
-      const language = cell.metadata?.language 
-        ? (typeof cell.metadata.language === 'string' ? cell.metadata.language : 'python')
+      const language = cell.metadata?.language
+        ? typeof cell.metadata.language === 'string'
+          ? cell.metadata.language
+          : 'python'
         : 'python';
       const isExecuting = executingCellIndex === index;
 
@@ -342,7 +377,11 @@ const NotebookEditor: React.FC<NotebookEditorProps> = ({
         <div key={index} className={styles.cell} data-cell-type="code">
           <div className={styles.cellToolbar}>
             <span className={styles.cellType}>
-              Code {cell.execution_count !== null && cell.execution_count !== undefined ? `[${cell.execution_count}]` : ''}
+              Code{' '}
+              {cell.execution_count !== null &&
+              cell.execution_count !== undefined
+                ? `[${cell.execution_count}]`
+                : ''}
             </span>
             <div className={styles.cellActions}>
               <Button
@@ -405,7 +444,7 @@ const NotebookEditor: React.FC<NotebookEditorProps> = ({
               />
             </div>
           </div>
-          <div 
+          <div
             className={styles.codeInput}
             onDoubleClick={() => startEdit(index)}
           >
@@ -425,8 +464,8 @@ const NotebookEditor: React.FC<NotebookEditorProps> = ({
             <div className={styles.codeOutput}>
               {outputs.map((output: any, outputIndex: number) => {
                 if (output.output_type === 'stream') {
-                  const text = Array.isArray(output.text) 
-                    ? output.text.join('') 
+                  const text = Array.isArray(output.text)
+                    ? output.text.join('')
                     : output.text || '';
                   return (
                     <pre key={outputIndex} className={styles.streamOutput}>
@@ -434,24 +473,30 @@ const NotebookEditor: React.FC<NotebookEditorProps> = ({
                     </pre>
                   );
                 }
-                if (output.output_type === 'display_data' || output.output_type === 'execute_result') {
+                if (
+                  output.output_type === 'display_data' ||
+                  output.output_type === 'execute_result'
+                ) {
                   const data = output.data || {};
-                  
+
                   if (data['image/png']) {
                     const imageData = data['image/png'];
-                    const imageSrc = Array.isArray(imageData) 
-                      ? imageData.join('') 
+                    const imageSrc = Array.isArray(imageData)
+                      ? imageData.join('')
                       : imageData;
                     return (
                       <div key={outputIndex} className={styles.imageOutput}>
-                        <img src={`data:image/png;base64,${imageSrc}`} alt="Output" />
+                        <img
+                          src={`data:image/png;base64,${imageSrc}`}
+                          alt="Output"
+                        />
                       </div>
                     );
                   }
-                  
+
                   if (data['text/html']) {
-                    const html = Array.isArray(data['text/html']) 
-                      ? data['text/html'].join('') 
+                    const html = Array.isArray(data['text/html'])
+                      ? data['text/html'].join('')
                       : data['text/html'];
                     return (
                       <div
@@ -461,10 +506,10 @@ const NotebookEditor: React.FC<NotebookEditorProps> = ({
                       />
                     );
                   }
-                  
+
                   if (data['text/plain']) {
-                    const text = Array.isArray(data['text/plain']) 
-                      ? data['text/plain'].join('') 
+                    const text = Array.isArray(data['text/plain'])
+                      ? data['text/plain'].join('')
                       : data['text/plain'];
                     return (
                       <pre key={outputIndex} className={styles.textOutput}>
@@ -472,12 +517,12 @@ const NotebookEditor: React.FC<NotebookEditorProps> = ({
                       </pre>
                     );
                   }
-                  
+
                   const dataKeys = Object.keys(data);
                   if (dataKeys.length > 0) {
                     const firstKey = dataKeys[0];
-                    const content = Array.isArray(data[firstKey]) 
-                      ? data[firstKey].join('') 
+                    const content = Array.isArray(data[firstKey])
+                      ? data[firstKey].join('')
                       : data[firstKey];
                     return (
                       <pre key={outputIndex} className={styles.textOutput}>
@@ -547,10 +592,7 @@ const NotebookEditor: React.FC<NotebookEditorProps> = ({
           >
             添加 Markdown
           </Button>
-          <Button
-            icon={<PlusOutlined />}
-            onClick={() => insertCell(0, 'code')}
-          >
+          <Button icon={<PlusOutlined />} onClick={() => insertCell(0, 'code')}>
             添加 Code
           </Button>
         </div>
@@ -574,4 +616,3 @@ const NotebookEditor: React.FC<NotebookEditorProps> = ({
 };
 
 export default NotebookEditor;
-
