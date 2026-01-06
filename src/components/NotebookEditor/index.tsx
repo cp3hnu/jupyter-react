@@ -609,7 +609,7 @@ const NotebookEditor: React.FC<NotebookEditorProps> = ({
         visible={showServerDialog}
         onOk={handleConnectServer}
         onCancel={() => setShowServerDialog(false)}
-        defaultUrl="http://localhost:8000/?token=08be6e0880fbf94764d60b37acce1fd7c3da925f58f5dba1"
+        defaultUrl="http://localhost:8000/?token=49c283a172476075d8786d62192b08b8047ead54eaf61496"
       />
     </div>
   );
