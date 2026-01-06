@@ -1,14 +1,22 @@
-import { ServerConnection, KernelManager, Kernel, SessionManager, Session } from '@jupyterlab/services';
-import { INotebookContent, ICell } from '@jupyterlab/nbformat';
+import {
+  KernelManager,
+  ServerConnection,
+  Session,
+  SessionManager,
+} from '@jupyterlab/services';
 
 /**
  * 解析 Jupyter Server URL
  */
-export function parseServerUrl(url: string): { baseUrl: string; token: string } {
+export function parseServerUrl(url: string): {
+  baseUrl: string;
+  token: string;
+} {
   try {
     const urlObj = new URL(url);
     const token = urlObj.searchParams.get('token') || '';
-    const baseUrl = `${urlObj.protocol}//${urlObj.host}${urlObj.pathname}`.replace(/\/$/, '');
+    const baseUrl =
+      `${urlObj.protocol}//${urlObj.host}${urlObj.pathname}`.replace(/\/$/, '');
     return { baseUrl, token };
   } catch (error) {
     throw new Error('Invalid server URL format');
@@ -18,23 +26,32 @@ export function parseServerUrl(url: string): { baseUrl: string; token: string } 
 /**
  * 创建 ServerConnection 设置
  */
-export function createServerSettings(baseUrl: string, token: string): ServerConnection.ISettings {
+export function createServerSettings(
+  baseUrl: string,
+  token: string,
+): ServerConnection.ISettings {
   // 如果使用代理，baseUrl 应该是相对路径
   // 检查是否是 localhost:8000（前端地址），如果是则使用代理路径指向 8889
   let finalBaseUrl = baseUrl;
   let wsUrl: string;
-  
+
   try {
     const urlObj = new URL(baseUrl);
     // 如果是 localhost:8000（前端地址），使用代理路径
-    if ((urlObj.hostname === 'localhost' || urlObj.hostname === '127.0.0.1') && urlObj.port === '8000') {
+    if (
+      (urlObj.hostname === 'localhost' || urlObj.hostname === '127.0.0.1') &&
+      urlObj.port === '8000'
+    ) {
       // HTTP 请求通过代理 /api/ 到 localhost:8889
       // Jupyter Server 的 API 路径是 /api，所以如果 baseUrl 设为 /api/，请求会是 /api/api/...（重复）
       // 因此 baseUrl 应该设为 /，这样请求 /api/sessions 会被代理到 localhost:8889/api/sessions
       finalBaseUrl = '/';
       // WebSocket 不能通过 HTTP 代理，需要直接连接到真实服务器 localhost:8889
-      wsUrl = `ws://localhost:8889/?token=${token}`;
-    } else if (urlObj.hostname === 'localhost' || urlObj.hostname === '127.0.0.1') {
+      wsUrl = `ws://localhost:8000/?token=${token}`;
+    } else if (
+      urlObj.hostname === 'localhost' ||
+      urlObj.hostname === '127.0.0.1'
+    ) {
       // 其他 localhost 地址（如 8889），直接使用
       finalBaseUrl = baseUrl;
       const wsBase = baseUrl.replace(/^http/, 'ws').replace(/^https/, 'wss');
@@ -61,7 +78,8 @@ export function createServerSettings(baseUrl: string, token: string): ServerConn
   const settings = ServerConnection.makeSettings({
     baseUrl: finalBaseUrl,
     token: token || '',
-    wsUrl: wsUrl || finalBaseUrl.replace(/^http/, 'ws').replace(/^https/, 'wss'),
+    wsUrl:
+      wsUrl || finalBaseUrl.replace(/^http/, 'ws').replace(/^https/, 'wss'),
     appendToken: true,
   });
 
@@ -73,17 +91,17 @@ export function createServerSettings(baseUrl: string, token: string): ServerConn
  */
 export async function createKernelSession(
   settings: ServerConnection.ISettings,
-  kernelName: string = 'python3'
+  kernelName: string = 'python3',
 ): Promise<Session.ISessionConnection> {
   // 创建 KernelManager
   const kernelManager = new KernelManager({ serverSettings: settings });
-  
+
   // 创建 SessionManager
-  const sessionManager = new SessionManager({ 
+  const sessionManager = new SessionManager({
     serverSettings: settings,
     kernelManager,
   });
-  
+
   // 创建新会话
   const session = await sessionManager.startNew({
     path: `notebook-${Date.now()}.ipynb`,
@@ -102,7 +120,7 @@ export async function createKernelSession(
  */
 export async function executeCode(
   session: Session.ISessionConnection,
-  code: string
+  code: string,
 ): Promise<{ outputs: any[]; execution_count: number | null }> {
   const kernel = session.kernel;
   if (!kernel) {
@@ -152,19 +170,22 @@ export async function executeCode(
       }
     };
 
-    future.done.then(() => {
-      resolve({ outputs, execution_count: executionCount });
-    }).catch((error) => {
-      reject(error);
-    });
+    future.done
+      .then(() => {
+        resolve({ outputs, execution_count: executionCount });
+      })
+      .catch((error) => {
+        reject(error);
+      });
   });
 }
 
 /**
  * 关闭会话
  */
-export async function closeSession(session: Session.ISessionConnection): Promise<void> {
+export async function closeSession(
+  session: Session.ISessionConnection,
+): Promise<void> {
   await session.shutdown();
   session.dispose();
 }
-

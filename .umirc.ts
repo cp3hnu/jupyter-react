@@ -18,15 +18,14 @@ export default defineConfig({
       name: '首页',
       path: '/home',
       component: './Home',
-    }
+    },
   ],
   npmClient: 'pnpm',
   proxy: {
     '/api/': {
-      target: 'http://localhost:8889',
+      target: 'http://localhost:8889/',
       changeOrigin: true,
-      //pathRewrite: { '^/embed/': '' },
+      ws: true, // 关键:启用 WebSocket 代理
     },
   },
 });
-
