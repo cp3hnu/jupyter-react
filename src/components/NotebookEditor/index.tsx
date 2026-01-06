@@ -26,6 +26,7 @@ import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import rehypeRaw from 'rehype-raw';
 import remarkGfm from 'remark-gfm';
+import NotebookOutput from '../NotebookOutput';
 import styles from './index.less';
 
 const { TextArea } = Input;
@@ -366,6 +367,8 @@ const NotebookEditor: React.FC<NotebookEditorProps> = ({
 
     if (cell.cell_type === 'code') {
       const outputs = (cell.outputs || []) as any[];
+      // console.log('outputs', outputs);
+
       const language = cell.metadata?.language
         ? typeof cell.metadata.language === 'string'
           ? cell.metadata.language
@@ -460,90 +463,7 @@ const NotebookEditor: React.FC<NotebookEditorProps> = ({
               {source || '# 空代码单元格'}
             </SyntaxHighlighter>
           </div>
-          {outputs.length > 0 && (
-            <div className={styles.codeOutput}>
-              {outputs.map((output: any, outputIndex: number) => {
-                if (output.output_type === 'stream') {
-                  const text = Array.isArray(output.text)
-                    ? output.text.join('')
-                    : output.text || '';
-                  return (
-                    <pre key={outputIndex} className={styles.streamOutput}>
-                      <code>{text}</code>
-                    </pre>
-                  );
-                }
-                if (
-                  output.output_type === 'display_data' ||
-                  output.output_type === 'execute_result'
-                ) {
-                  const data = output.data || {};
-
-                  if (data['image/png']) {
-                    const imageData = data['image/png'];
-                    const imageSrc = Array.isArray(imageData)
-                      ? imageData.join('')
-                      : imageData;
-                    return (
-                      <div key={outputIndex} className={styles.imageOutput}>
-                        <img
-                          src={`data:image/png;base64,${imageSrc}`}
-                          alt="Output"
-                        />
-                      </div>
-                    );
-                  }
-
-                  if (data['text/html']) {
-                    const html = Array.isArray(data['text/html'])
-                      ? data['text/html'].join('')
-                      : data['text/html'];
-                    return (
-                      <div
-                        key={outputIndex}
-                        className={styles.htmlOutput}
-                        dangerouslySetInnerHTML={{ __html: html }}
-                      />
-                    );
-                  }
-
-                  if (data['text/plain']) {
-                    const text = Array.isArray(data['text/plain'])
-                      ? data['text/plain'].join('')
-                      : data['text/plain'];
-                    return (
-                      <pre key={outputIndex} className={styles.textOutput}>
-                        <code>{text}</code>
-                      </pre>
-                    );
-                  }
-
-                  const dataKeys = Object.keys(data);
-                  if (dataKeys.length > 0) {
-                    const firstKey = dataKeys[0];
-                    const content = Array.isArray(data[firstKey])
-                      ? data[firstKey].join('')
-                      : data[firstKey];
-                    return (
-                      <pre key={outputIndex} className={styles.textOutput}>
-                        <code>{content}</code>
-                      </pre>
-                    );
-                  }
-                }
-                if (output.output_type === 'error') {
-                  const traceback = output.traceback || [];
-                  const errorText = traceback.join('\n');
-                  return (
-                    <pre key={outputIndex} className={styles.errorOutput}>
-                      <code>{errorText}</code>
-                    </pre>
-                  );
-                }
-                return null;
-              })}
-            </div>
-          )}
+          {outputs.length > 0 && <NotebookOutput outputs={outputs} />}
         </div>
       );
     }

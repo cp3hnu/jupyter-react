@@ -6,10 +6,22 @@ function LuminoWrapper({ widget }: { widget: Widget }) {
 
   useEffect(() => {
     if (!ref.current) return;
-    Widget.attach(widget, ref.current);
+
+    try {
+      Widget.attach(widget, ref.current);
+    } catch (e) {
+      console.warn('Exception while attaching Lumino widget.', e);
+    }
 
     return () => {
-      widget.dispose();
+      try {
+        if (widget.isAttached || widget.node.isConnected) {
+          widget.dispose();
+          Widget.detach(widget);
+        }
+      } catch (e) {
+        console.debug('Exception while detaching Lumino widget.', e);
+      }
     };
   }, [widget]);
 
