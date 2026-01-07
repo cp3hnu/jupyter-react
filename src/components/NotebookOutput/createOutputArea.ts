@@ -1,5 +1,5 @@
 import { OutputArea, OutputAreaModel } from '@jupyterlab/outputarea';
-import { getRendermime } from './ createRendermime';
+import { getRendermime } from './createRendermime';
 
 export function createOutputArea() {
   const model = new OutputAreaModel();
