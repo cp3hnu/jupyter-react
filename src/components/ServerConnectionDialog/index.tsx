@@ -1,4 +1,4 @@
-import { parseServerUrl } from '@/utils/jupyter';
+import { parseServerUrl } from '@/services/jupyter';
 import { Form, Input, message, Modal } from 'antd';
 import React, { useState } from 'react';
 

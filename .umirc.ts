@@ -19,6 +19,11 @@ export default defineConfig({
       path: '/home',
       component: './Home',
     },
+    {
+      name: 'Lumino',
+      path: '/lumino',
+      component: './Lumino',
+    },
   ],
   npmClient: 'pnpm',
   proxy: {

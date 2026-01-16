@@ -4,7 +4,7 @@ import {
   createKernelSession,
   createServerSettings,
   executeCode,
-} from '@/utils/jupyter';
+} from '@/services/jupyter';
 import { saveNotebook } from '@/utils/notebook';
 import {
   CheckOutlined,

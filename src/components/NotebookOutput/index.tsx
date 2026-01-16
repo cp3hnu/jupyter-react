@@ -2,6 +2,7 @@ import { IOutput } from '@jupyterlab/nbformat';
 import { useEffect, useMemo } from 'react';
 import LuminoWrapper from '../LuminoWrapper';
 import { createOutputArea } from './createOutputArea';
+import './index.less';
 
 interface NotebookOutputProps {
   outputs: IOutput[];
