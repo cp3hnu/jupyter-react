@@ -7,13 +7,13 @@ export default defineConfig({
   initialState: {},
   request: {},
   layout: {
-    title: '@umijs/max',
+    title: 'Notebook',
   },
 
   routes: [
     {
       path: '/',
-      redirect: '/home/list',
+      redirect: '/home',
     },
     {
       name: '首页',

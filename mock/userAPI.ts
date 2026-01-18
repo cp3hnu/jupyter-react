@@ -36,6 +36,13 @@ function readManifest(): string[] {
   }
 }
 
+function isSafeFilename(file: string) {
+  if (!file) return false;
+  if (file.includes('..') || file.includes('/') || file.includes('\\'))
+    return false;
+  return file.endsWith('.ipynb');
+}
+
 export default {
   'GET /local-api/notebooks': (req: any, res: any) => {
     const files = readManifest();
@@ -79,6 +86,52 @@ export default {
       nbformat: 4,
       nbformat_minor: 5,
     };
+    fs.writeFileSync(
+      targetPath,
+      JSON.stringify(notebook, null, 2) + '\n',
+      'utf8',
+    );
+
+    const files = regenerateManifest();
+    res.json({
+      success: true,
+      data: { file, files },
+      errorCode: 0,
+    });
+  },
+  'PUT /local-api/notebooks/:file': (req: any, res: any) => {
+    const file = (req.params?.file || '').toString();
+    if (!isSafeFilename(file)) {
+      res.status(400).json({
+        success: false,
+        errorCode: 400,
+        message: 'Invalid file name',
+      });
+      return;
+    }
+
+    const notebook = req.body;
+    if (!notebook || typeof notebook !== 'object') {
+      res.status(400).json({
+        success: false,
+        errorCode: 400,
+        message: 'Invalid notebook payload',
+      });
+      return;
+    }
+
+    const dataDir = ensureDataDir();
+    const targetPath = path.resolve(dataDir, file);
+
+    if (!fs.existsSync(targetPath)) {
+      res.status(404).json({
+        success: false,
+        errorCode: 404,
+        message: 'Notebook file not found',
+      });
+      return;
+    }
+
     fs.writeFileSync(
       targetPath,
       JSON.stringify(notebook, null, 2) + '\n',

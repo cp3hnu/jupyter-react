@@ -36,6 +36,7 @@ const NotebookEditor: React.FC<NotebookEditorProps> = ({
   const [notebook, setNotebook] = useState<INotebookContent>(initialNotebook);
   const [editingCellId, setEditingCellId] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
+  const [persisting, setPersisting] = useState(false);
   const [session, setSession] = useState<Session.ISessionConnection | null>(
     null,
   );
@@ -234,7 +235,7 @@ const NotebookEditor: React.FC<NotebookEditorProps> = ({
     }
   };
 
-  // 保存 notebook
+  // 导出 notebook
   const handleSave = async () => {
     try {
       setSaving(true);
@@ -243,6 +244,42 @@ const NotebookEditor: React.FC<NotebookEditorProps> = ({
       } else {
         await saveNotebook(notebookPath, notebook);
       }
+      message.success('导出成功');
+    } catch (error) {
+      message.error(
+        '导出失败: ' +
+          (error instanceof Error ? error.message : 'Unknown error'),
+      );
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handlePersist = async () => {
+    try {
+      const file = notebookPath.split('/').pop() || '';
+      if (!file.endsWith('.ipynb')) {
+        message.error('无效的文件名');
+        return;
+      }
+
+      setPersisting(true);
+      const res = await fetch(
+        `/local-api/notebooks/${encodeURIComponent(file)}`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(notebook),
+        },
+      );
+
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(text || 'Failed to save');
+      }
+
       message.success('保存成功');
     } catch (error) {
       message.error(
@@ -250,7 +287,7 @@ const NotebookEditor: React.FC<NotebookEditorProps> = ({
           (error instanceof Error ? error.message : 'Unknown error'),
       );
     } finally {
-      setSaving(false);
+      setPersisting(false);
     }
   };
 
@@ -299,10 +336,13 @@ const NotebookEditor: React.FC<NotebookEditorProps> = ({
           <Button
             type="primary"
             icon={<SaveOutlined />}
-            onClick={handleSave}
-            loading={saving}
+            onClick={handlePersist}
+            loading={persisting}
           >
             保存
+          </Button>
+          <Button icon={<SaveOutlined />} onClick={handleSave} loading={saving}>
+            导出
           </Button>
           {session ? (
             <Button
