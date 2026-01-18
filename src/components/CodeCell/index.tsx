@@ -48,13 +48,9 @@ function CodeCell({
     updateHeight(); // 初始化时调用
 
     editor.onDidContentSizeChange(() => {
-      console.log('zzz');
-
       updateHeight();
     });
     editor.onDidFocusEditorText(() => {
-      console.log('dddd');
-
       onEdit?.(cell.id);
     });
   };

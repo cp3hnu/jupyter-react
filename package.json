@@ -2,7 +2,9 @@
   "private": true,
   "author": "cp3hnu <cp3hnu@gmail.com>",
   "scripts": {
+    "prebuild": "node scripts/generate-data-manifest.mjs",
     "build": "max build",
+    "predev": "node scripts/generate-data-manifest.mjs",
     "dev": "max dev",
     "format": "prettier --cache --write .",
     "postinstall": "max setup",

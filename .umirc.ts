@@ -9,20 +9,27 @@ export default defineConfig({
   layout: {
     title: '@umijs/max',
   },
+
   routes: [
     {
       path: '/',
-      redirect: '/home',
+      redirect: '/home/list',
     },
     {
       name: '首页',
       path: '/home',
-      component: './Home',
-    },
-    {
-      name: 'Lumino',
-      path: '/lumino',
-      component: './Lumino',
+      routes: [
+        {
+          path: '',
+          component: './Home',
+        },
+        {
+          name: 'Notebook',
+          path: 'notebook',
+          component: './Notebook',
+          hideInMenu: true, // 关键：隐藏侧边栏菜单项
+        },
+      ],
     },
   ],
   npmClient: 'pnpm',

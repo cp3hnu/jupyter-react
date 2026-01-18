@@ -13,3 +13,4 @@
 .swc
 .jupyter
 .ipynb_checkpoints
+/public/data
