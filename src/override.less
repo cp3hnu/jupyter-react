@@ -1,0 +1,75 @@
+@primary-color: #1677ff;
+@text-color-secondary: #494a6f;
+
+.w-md-editor {
+  .w-md-editor-toolbar {
+    border-radius: 0;
+    li {
+      button {
+        height: auto;
+        line-height: 16px;
+      }
+
+      svg {
+        width: 16px;
+        height: 16px;
+        color: @text-color-secondary;
+      }
+    }
+  }
+
+  .w-md-editor-text-pre > code,
+  .w-md-editor-text-input {
+    font-size: 14px !important;
+    line-height: 21px !important;
+  }
+
+  ol > li {
+    list-style-type: decimal;
+  }
+
+  ul > li {
+    list-style-type: disc;
+  }
+}
+
+.wmde-markdown.wmde-markdown-color {
+  padding: 20px;
+  overflow-y: auto;
+  font-size: 14px;
+  background-color: white;
+  border-radius: 0 0 8px 8px;
+
+  ol > li {
+    list-style-type: decimal;
+  }
+
+  ul > li {
+    list-style-type: disc;
+  }
+
+  .contains-task-list input[type='checkbox'] {
+    margin-left: 0;
+  }
+}
+
+.wmde-markdown pre,
+.wmde-markdown code {
+  -moz-tab-size: 2;
+  -webkit-tab-size: 2;
+  tab-size: 2;
+}
+
+.wmde-markdown pre code {
+  -moz-tab-size: 2;
+  -webkit-tab-size: 2;
+  tab-size: 2;
+}
+
+.wmde-markdown pre:hover .copied:hover {
+  background: @primary-color;
+}
+
+.wmde-markdown pre .copied.active {
+  background: @primary-color;
+}

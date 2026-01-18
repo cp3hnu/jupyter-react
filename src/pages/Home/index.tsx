@@ -1,10 +1,9 @@
 import NotebookEditor from '@/components/NotebookEditor';
 import { loadNotebook, saveNotebook } from '@/utils/notebook';
-import { PageContainer } from '@ant-design/pro-components';
 import { INotebookContent } from '@jupyterlab/nbformat';
+import { UUID } from '@lumino/coreutils';
 import { Spin } from 'antd';
 import React, { useEffect, useState } from 'react';
-import styles from './index.less';
 
 const HomePage: React.FC = () => {
   const [notebook, setNotebook] = useState<INotebookContent | null>(null);
@@ -17,6 +16,11 @@ const HomePage: React.FC = () => {
         setLoading(true);
         // UmiJS 中，public 目录下的文件可以直接通过 / 路径访问
         const data = await loadNotebook('/data/article.ipynb');
+        data.cells.forEach((cell) => {
+          if (!cell.id) {
+            cell.id = UUID.uuid4();
+          }
+        });
         setNotebook(data);
       } catch (err) {
         setError(
@@ -38,27 +42,25 @@ const HomePage: React.FC = () => {
   };
 
   return (
-    <PageContainer ghost>
-      <div className={styles.container}>
-        {loading && (
-          <div style={{ textAlign: 'center', padding: '50px' }}>
-            <Spin size="large" />
-          </div>
-        )}
-        {error && (
-          <div style={{ textAlign: 'center', padding: '50px', color: 'red' }}>
-            Error: {error}
-          </div>
-        )}
-        {notebook && (
-          <NotebookEditor
-            notebook={notebook}
-            onSave={handleSave}
-            notebookPath="/data/article.ipynb"
-          />
-        )}
-      </div>
-    </PageContainer>
+    <div>
+      {loading && (
+        <div style={{ textAlign: 'center', padding: '50px' }}>
+          <Spin size="large" />
+        </div>
+      )}
+      {error && (
+        <div style={{ textAlign: 'center', padding: '50px', color: 'red' }}>
+          Error: {error}
+        </div>
+      )}
+      {notebook && (
+        <NotebookEditor
+          notebook={notebook}
+          onSave={handleSave}
+          notebookPath="/data/article.ipynb"
+        />
+      )}
+    </div>
   );
 };
 

@@ -5,31 +5,22 @@ import {
   createServerSettings,
   executeCode,
 } from '@/services/jupyter';
+import { ZCodeCell, ZMarkdownCell } from '@/types/notebook';
 import { saveNotebook } from '@/utils/notebook';
 import {
-  CheckOutlined,
-  CloseOutlined,
-  DeleteOutlined,
   DisconnectOutlined,
-  EditOutlined,
   LinkOutlined,
-  PlayCircleOutlined,
   PlusOutlined,
   SaveOutlined,
 } from '@ant-design/icons';
-import { ICell, INotebookContent } from '@jupyterlab/nbformat';
+import { CellType, ICell, INotebookContent } from '@jupyterlab/nbformat';
 import { Session } from '@jupyterlab/services';
-import { Button, Input, message } from 'antd';
+import { UUID } from '@lumino/coreutils';
+import { Button, message } from 'antd';
 import React, { useEffect, useState } from 'react';
-import ReactMarkdown from 'react-markdown';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
-import rehypeRaw from 'rehype-raw';
-import remarkGfm from 'remark-gfm';
-import NotebookOutput from '../NotebookOutput';
+import CodeCell, { type InsertPosition } from '../CodeCell';
+import MarkdownCell from '../MarkdownCell';
 import styles from './index.less';
-
-const { TextArea } = Input;
 
 interface NotebookEditorProps {
   notebook: INotebookContent;
@@ -43,21 +34,40 @@ const NotebookEditor: React.FC<NotebookEditorProps> = ({
   notebookPath = '/data/article.ipynb',
 }) => {
   const [notebook, setNotebook] = useState<INotebookContent>(initialNotebook);
-  const [editingCellIndex, setEditingCellIndex] = useState<number | null>(null);
-  const [editingContent, setEditingContent] = useState<string>('');
+  const [editingCellId, setEditingCellId] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [session, setSession] = useState<Session.ISessionConnection | null>(
     null,
   );
   const [serverUrl, setServerUrl] = useState<string>('');
   const [showServerDialog, setShowServerDialog] = useState(false);
-  const [executingCellIndex, setExecutingCellIndex] = useState<number | null>(
-    null,
-  );
+  const [executingCellId, setExecutingCellId] = useState<string | null>(null);
+
+  // 清理：组件卸载时关闭会话
+  useEffect(() => {
+    return () => {
+      if (session) {
+        closeSession(session).catch(console.error);
+      }
+    };
+  }, [session]);
+
+  // 开始编辑 cell
+  const startEdit = (id: string) => {
+    setEditingCellId(id);
+  };
+
+  // 结束编辑
+  const endEdit = (id?: string) => {
+    if ((id && id === editingCellId) || !id) {
+      setEditingCellId(null);
+    }
+  };
 
   // 创建新的 cell
-  const createNewCell = (cellType: 'markdown' | 'code'): ICell => {
+  const createNewCell = (cellType: CellType): ICell => {
     return {
+      id: UUID.uuid4(),
       cell_type: cellType,
       source: '',
       metadata: {},
@@ -67,65 +77,65 @@ const NotebookEditor: React.FC<NotebookEditorProps> = ({
   };
 
   // 插入 cell
-  const insertCell = (index: number, cellType: 'markdown' | 'code') => {
+  const insertCell = (
+    id: string | null,
+    cellType: CellType,
+    position: InsertPosition,
+  ) => {
     const newCell = createNewCell(cellType);
-    const newCells = [...(notebook.cells || [])];
-    newCells.splice(index, 0, newCell);
-    setNotebook({ ...notebook, cells: newCells });
-    setEditingCellIndex(index);
-    setEditingContent('');
+    if (id) {
+      const index = notebook.cells?.findIndex((cell) => cell.id === id);
+      if (index !== undefined) {
+        const insertIndex = position === 'before' ? index : index + 1;
+        setNotebook((prev) => {
+          return {
+            ...prev,
+            cells: [
+              ...prev.cells?.slice(0, insertIndex),
+              newCell,
+              ...prev.cells?.slice(insertIndex),
+            ],
+          };
+        });
+        return;
+      }
+    }
+
+    setNotebook((prev) => ({
+      ...prev,
+      cells: [newCell, ...(prev.cells || [])],
+    }));
   };
 
   // 删除 cell
-  const deleteCell = (index: number) => {
-    const newCells = [...(notebook.cells || [])];
-    newCells.splice(index, 1);
-    setNotebook({ ...notebook, cells: newCells });
-    if (editingCellIndex === index) {
-      setEditingCellIndex(null);
-    } else if (editingCellIndex !== null && editingCellIndex > index) {
-      setEditingCellIndex(editingCellIndex - 1);
+  const deleteCell = (id: string) => {
+    if (editingCellId === id) {
+      setEditingCellId(null);
     }
+
+    setNotebook((prev) => ({
+      ...prev,
+      cells: prev.cells?.filter((cell) => cell.id !== id),
+    }));
   };
 
-  // 开始编辑 cell
-  const startEdit = (index: number) => {
-    const cell = notebook.cells?.[index];
-    if (cell) {
-      const source = Array.isArray(cell.source)
-        ? cell.source.join('')
-        : cell.source || '';
-      setEditingCellIndex(index);
-      setEditingContent(source);
-    }
-  };
-
-  // 保存编辑
-  const saveEdit = (index: number) => {
-    const newCells = [...(notebook.cells || [])];
-    const cell = { ...newCells[index] };
-    cell.source = editingContent;
-    newCells[index] = cell;
-    setNotebook({ ...notebook, cells: newCells });
-    setEditingCellIndex(null);
-    setEditingContent('');
-  };
-
-  // 取消编辑
-  const cancelEdit = () => {
-    setEditingCellIndex(null);
-    setEditingContent('');
-  };
-
-  // 处理键盘事件
-  const handleKeyDown = (e: React.KeyboardEvent, index: number) => {
-    if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
-      e.preventDefault();
-      saveEdit(index);
-    } else if (e.key === 'Escape') {
-      e.preventDefault();
-      cancelEdit();
-    }
+  // 处理 cell 内容改变
+  const handleCellSourceChange = (id: string, value: string) => {
+    setNotebook((prev) => {
+      const newCells = notebook.cells?.map((cell) => {
+        if (cell.id === id) {
+          return {
+            ...cell,
+            source: value,
+          };
+        }
+        return cell;
+      });
+      return {
+        ...prev,
+        cells: newCells,
+      };
+    });
   };
 
   // 连接 Jupyter Server
@@ -170,14 +180,14 @@ const NotebookEditor: React.FC<NotebookEditorProps> = ({
   };
 
   // 执行 code cell
-  const executeCell = async (index: number) => {
+  const executeCell = async (id: string) => {
     if (!session) {
       message.warning('请先连接 Jupyter Server');
       setShowServerDialog(true);
       return;
     }
 
-    const cell = notebook.cells?.[index];
+    const cell = notebook.cells?.find((cell) => cell.id === id);
     if (!cell || cell.cell_type !== 'code') {
       return;
     }
@@ -192,16 +202,26 @@ const NotebookEditor: React.FC<NotebookEditorProps> = ({
     }
 
     try {
-      setExecutingCellIndex(index);
+      setExecutingCellId(id);
       const { outputs, execution_count } = await executeCode(session, source);
 
       // 更新 cell 的输出和执行计数
-      const newCells = [...(notebook.cells || [])];
-      const updatedCell = { ...newCells[index] };
-      updatedCell.outputs = outputs;
-      updatedCell.execution_count = execution_count;
-      newCells[index] = updatedCell;
-      setNotebook({ ...notebook, cells: newCells });
+      setNotebook((prev) => {
+        const newCells = notebook.cells?.map((cell) => {
+          if (cell.id === id) {
+            return {
+              ...cell,
+              outputs,
+              execution_count,
+            };
+          }
+          return cell;
+        });
+        return {
+          ...prev,
+          cells: newCells,
+        };
+      });
 
       message.success('执行成功');
     } catch (error) {
@@ -210,18 +230,9 @@ const NotebookEditor: React.FC<NotebookEditorProps> = ({
           (error instanceof Error ? error.message : 'Unknown error'),
       );
     } finally {
-      setExecutingCellIndex(null);
+      setExecutingCellId(null);
     }
   };
-
-  // 清理：组件卸载时关闭会话
-  useEffect(() => {
-    return () => {
-      if (session) {
-        closeSession(session).catch(console.error);
-      }
-    };
-  }, [session]);
 
   // 保存 notebook
   const handleSave = async () => {
@@ -244,227 +255,37 @@ const NotebookEditor: React.FC<NotebookEditorProps> = ({
   };
 
   // 渲染 cell
-  const renderCell = (cell: ICell, index: number) => {
-    const isEditing = editingCellIndex === index;
-    const source = Array.isArray(cell.source)
-      ? cell.source.join('')
-      : cell.source || '';
-
-    if (isEditing) {
-      return (
-        <div
-          key={index}
-          className={styles.cell}
-          data-cell-type={cell.cell_type}
-        >
-          <div className={styles.cellToolbar}>
-            <span className={styles.cellType}>
-              {cell.cell_type === 'markdown' ? 'Markdown' : 'Code'}
-            </span>
-            <div className={styles.cellActions}>
-              <Button
-                type="text"
-                size="small"
-                icon={<CheckOutlined />}
-                onClick={() => saveEdit(index)}
-              >
-                保存
-              </Button>
-              <Button
-                type="text"
-                size="small"
-                icon={<CloseOutlined />}
-                onClick={cancelEdit}
-              >
-                取消
-              </Button>
-            </div>
-          </div>
-          <div className={styles.cellEditor}>
-            <TextArea
-              value={editingContent}
-              onChange={(e) => setEditingContent(e.target.value)}
-              onKeyDown={(e) => handleKeyDown(e, index)}
-              autoSize={{ minRows: 3 }}
-              className={styles.textArea}
-              autoFocus
-            />
-            <div className={styles.editHint}>按 Ctrl+Enter 保存，Esc 取消</div>
-          </div>
-        </div>
-      );
-    }
+  const renderCell = (cell: ICell) => {
+    const isEditing = editingCellId === cell.id;
 
     if (cell.cell_type === 'markdown') {
       return (
-        <div key={index} className={styles.cell} data-cell-type="markdown">
-          <div className={styles.cellToolbar}>
-            <span className={styles.cellType}>Markdown</span>
-            <div className={styles.cellActions}>
-              <Button
-                type="text"
-                size="small"
-                onClick={() => insertCell(index, 'markdown')}
-                title="在上方插入 Markdown"
-              >
-                +M
-              </Button>
-              <Button
-                type="text"
-                size="small"
-                onClick={() => insertCell(index, 'code')}
-                title="在上方插入 Code"
-              >
-                +C
-              </Button>
-              <Button
-                type="text"
-                size="small"
-                onClick={() => insertCell(index + 1, 'markdown')}
-                title="在下方插入 Markdown"
-              >
-                M+
-              </Button>
-              <Button
-                type="text"
-                size="small"
-                onClick={() => insertCell(index + 1, 'code')}
-                title="在下方插入 Code"
-              >
-                C+
-              </Button>
-              <Button
-                type="text"
-                size="small"
-                icon={<EditOutlined />}
-                onClick={() => startEdit(index)}
-                title="编辑（或双击单元格）"
-              />
-              <Button
-                type="text"
-                size="small"
-                danger
-                icon={<DeleteOutlined />}
-                onClick={() => deleteCell(index)}
-                title="删除"
-              />
-            </div>
-          </div>
-          <div
-            className={styles.cellContent}
-            onDoubleClick={() => startEdit(index)}
-          >
-            <ReactMarkdown
-              remarkPlugins={[remarkGfm]}
-              rehypePlugins={[rehypeRaw]}
-            >
-              {source || '*空单元格*'}
-            </ReactMarkdown>
-          </div>
-        </div>
+        <MarkdownCell
+          key={cell.id as string}
+          cell={cell as ZMarkdownCell}
+          isEditing={isEditing}
+          onInsert={insertCell}
+          onEdit={startEdit}
+          onEditEnd={endEdit}
+          onDelete={deleteCell}
+          onChange={handleCellSourceChange}
+        />
       );
     }
 
     if (cell.cell_type === 'code') {
-      const outputs = (cell.outputs || []) as any[];
-      // console.log('outputs', outputs);
-
-      const language = cell.metadata?.language
-        ? typeof cell.metadata.language === 'string'
-          ? cell.metadata.language
-          : 'python'
-        : 'python';
-      const isExecuting = executingCellIndex === index;
-
+      const isExecuting = executingCellId === cell.id;
       return (
-        <div key={index} className={styles.cell} data-cell-type="code">
-          <div className={styles.cellToolbar}>
-            <span className={styles.cellType}>
-              Code{' '}
-              {cell.execution_count !== null &&
-              cell.execution_count !== undefined
-                ? `[${cell.execution_count}]`
-                : ''}
-            </span>
-            <div className={styles.cellActions}>
-              <Button
-                type="text"
-                size="small"
-                icon={<PlayCircleOutlined />}
-                onClick={() => executeCell(index)}
-                loading={isExecuting}
-                disabled={isExecuting}
-                title="执行代码"
-              >
-                执行
-              </Button>
-              <Button
-                type="text"
-                size="small"
-                onClick={() => insertCell(index, 'markdown')}
-                title="在上方插入 Markdown"
-              >
-                +M
-              </Button>
-              <Button
-                type="text"
-                size="small"
-                onClick={() => insertCell(index, 'code')}
-                title="在上方插入 Code"
-              >
-                +C
-              </Button>
-              <Button
-                type="text"
-                size="small"
-                onClick={() => insertCell(index + 1, 'markdown')}
-                title="在下方插入 Markdown"
-              >
-                M+
-              </Button>
-              <Button
-                type="text"
-                size="small"
-                onClick={() => insertCell(index + 1, 'code')}
-                title="在下方插入 Code"
-              >
-                C+
-              </Button>
-              <Button
-                type="text"
-                size="small"
-                icon={<EditOutlined />}
-                onClick={() => startEdit(index)}
-                title="编辑（或双击单元格）"
-              />
-              <Button
-                type="text"
-                size="small"
-                danger
-                icon={<DeleteOutlined />}
-                onClick={() => deleteCell(index)}
-                title="删除"
-              />
-            </div>
-          </div>
-          <div
-            className={styles.codeInput}
-            onDoubleClick={() => startEdit(index)}
-          >
-            <SyntaxHighlighter
-              language={language}
-              style={vscDarkPlus}
-              customStyle={{
-                margin: 0,
-                borderRadius: '4px',
-                fontSize: '14px',
-              }}
-            >
-              {source || '# 空代码单元格'}
-            </SyntaxHighlighter>
-          </div>
-          {outputs.length > 0 && <NotebookOutput outputs={outputs} />}
-        </div>
+        <CodeCell
+          key={cell.id as string}
+          cell={cell as ZCodeCell}
+          isExecuting={isExecuting}
+          onEdit={startEdit}
+          onInsert={insertCell}
+          onDelete={deleteCell}
+          onChange={handleCellSourceChange}
+          onExecute={executeCell}
+        />
       );
     }
 
@@ -508,17 +329,20 @@ const NotebookEditor: React.FC<NotebookEditorProps> = ({
         <div className={styles.toolbarActions}>
           <Button
             icon={<PlusOutlined />}
-            onClick={() => insertCell(0, 'markdown')}
+            onClick={() => insertCell(null, 'markdown', 'after')}
           >
             添加 Markdown
           </Button>
-          <Button icon={<PlusOutlined />} onClick={() => insertCell(0, 'code')}>
+          <Button
+            icon={<PlusOutlined />}
+            onClick={() => insertCell(null, 'code', 'after')}
+          >
             添加 Code
           </Button>
         </div>
       </div>
       <div className={styles.cellsContainer}>
-        {notebook.cells?.map((cell, index) => renderCell(cell, index))}
+        {notebook.cells?.map((cell) => renderCell(cell))}
         {(!notebook.cells || notebook.cells.length === 0) && (
           <div className={styles.emptyState}>
             <p>Notebook 为空，点击上方按钮添加 cell</p>

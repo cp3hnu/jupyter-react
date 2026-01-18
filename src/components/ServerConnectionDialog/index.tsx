@@ -79,7 +79,7 @@ const ServerConnectionDialog: React.FC<ServerConnectionDialogProps> = ({
           ]}
           help="例如: http://localhost:8889/?token=your_token"
         >
-          <Input
+          <Input.TextArea
             placeholder="http://localhost:8889/?token=your_token"
             autoFocus
           />

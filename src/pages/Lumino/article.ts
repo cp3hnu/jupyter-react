@@ -13,7 +13,9 @@ function createNode(): HTMLElement {
   span.textContent = '这是正文';
 
   const img = document.createElement('img');
-  img.src = 'http://localhost:8000/image/example.jpg';
+  img.style.display = 'block';
+  img.src =
+    'https://img0.baidu.com/it/u=3165460051,2199693685&fm=253&fmt=auto&app=120&f=JPEG?w=667&h=500';
 
   root.append(h1, p, span, img);
   return root;
