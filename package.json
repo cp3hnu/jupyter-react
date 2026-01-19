@@ -31,11 +31,16 @@
     "@umijs/max": "^4.6.15",
     "antd": "^5.4.0",
     "classnames": "^2.5.1",
+    "katex": "^0.16.27",
     "marked": "^17.0.1",
     "monaco-editor": "^0.55.1",
     "react-markdown": "^10.1.0",
+    "rehype-katex": "^7.0.1",
     "rehype-raw": "^7.0.0",
-    "remark-gfm": "^4.0.1"
+    "rehype-rewrite": "^4.0.4",
+    "rehype-sanitize": "^6.0.0",
+    "remark-gfm": "^4.0.1",
+    "remark-math": "^6.0.0"
   },
   "devDependencies": {
     "@types/react": "^18.0.33",

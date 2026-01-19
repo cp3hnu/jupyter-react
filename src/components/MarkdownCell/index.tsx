@@ -1,11 +1,15 @@
 import { ZMarkdownCell } from '@/types/notebook';
 import { CellType } from '@jupyterlab/nbformat';
 import MDEditor from '@uiw/react-md-editor';
+import rehypeKatex from 'rehype-katex';
 import rehypeRaw from 'rehype-raw';
+import rehypeSanitize from 'rehype-sanitize';
 import remarkGfm from 'remark-gfm';
+import remarkMath from 'remark-math';
 import { type InsertPosition } from '../CellAction';
 import CellToolBar from '../CellToolBar';
 import styles from './index.less';
+import KatexCode from './katexCode';
 
 type MarkdownCellProps = {
   cell: ZMarkdownCell;
@@ -14,7 +18,7 @@ type MarkdownCellProps = {
   onEdit?: (id: string) => void;
   onDelete?: (id: string) => void;
   onChange?: (id: string, value: string) => void;
-  onEditEnd?: (id?: string) => void;
+  onClick?: (id?: string) => void;
 };
 
 function MarkdownCell({
@@ -22,7 +26,7 @@ function MarkdownCell({
   isEditing,
   onInsert,
   onEdit,
-  onEditEnd,
+  onClick,
   onDelete,
   onChange,
 }: MarkdownCellProps) {
@@ -62,21 +66,28 @@ function MarkdownCell({
             onChange={handleValueChange}
             height={'fit-content'}
             style={{ maxHeight: '500px' }}
-            textareaProps={{
-              onBlur: () => onEditEnd?.(cell.id),
+            previewOptions={{
+              remarkPlugins: [remarkGfm, remarkMath],
+              rehypePlugins: [rehypeRaw, rehypeSanitize, rehypeKatex],
+              components: {
+                code: KatexCode,
+              },
             }}
           ></MDEditor>
         </div>
       ) : (
         <div
           className={styles.cellContent}
-          onClick={() => onEditEnd?.()}
+          onClick={() => onClick?.(cell.id)}
           onDoubleClick={handleEdit}
         >
           <MDEditor.Markdown
             source={mdSource}
-            remarkPlugins={[remarkGfm]}
-            rehypePlugins={[rehypeRaw]}
+            remarkPlugins={[remarkGfm, remarkMath]}
+            rehypePlugins={[rehypeRaw, rehypeSanitize, rehypeKatex]}
+            components={{
+              code: KatexCode,
+            }}
           ></MDEditor.Markdown>
         </div>
       )}

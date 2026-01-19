@@ -1,3 +1,6 @@
 {
-  "editor.fontSize": 16
+  "editor.fontSize": 16,
+  "editor.formatOnSave": true,
+  "editor.formatOnPaste": true,
+  "workbench.editor.wrapTabs": true
 }

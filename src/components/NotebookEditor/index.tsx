@@ -59,10 +59,8 @@ const NotebookEditor: React.FC<NotebookEditorProps> = ({
   };
 
   // 结束编辑
-  const endEdit = (id?: string) => {
-    if ((id && id === editingCellId) || !id) {
-      setEditingCellId(null);
-    }
+  const clickCell = () => {
+    setEditingCellId(null);
   };
 
   // 创建新的 cell
@@ -84,9 +82,10 @@ const NotebookEditor: React.FC<NotebookEditorProps> = ({
     position: InsertPosition,
   ) => {
     const newCell = createNewCell(cellType);
+    setEditingCellId(newCell.id as string);
     if (id) {
       const index = notebook.cells?.findIndex((cell) => cell.id === id);
-      if (index !== undefined) {
+      if (index !== -1) {
         const insertIndex = position === 'before' ? index : index + 1;
         setNotebook((prev) => {
           return {
@@ -98,6 +97,7 @@ const NotebookEditor: React.FC<NotebookEditorProps> = ({
             ],
           };
         });
+
         return;
       }
     }
@@ -303,7 +303,7 @@ const NotebookEditor: React.FC<NotebookEditorProps> = ({
           isEditing={isEditing}
           onInsert={insertCell}
           onEdit={startEdit}
-          onEditEnd={endEdit}
+          onClick={clickCell}
           onDelete={deleteCell}
           onChange={handleCellSourceChange}
         />

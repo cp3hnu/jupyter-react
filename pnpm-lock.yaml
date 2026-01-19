@@ -56,6 +56,9 @@ dependencies:
   classnames:
     specifier: ^2.5.1
     version: registry.npmjs.org/classnames@2.5.1
+  katex:
+    specifier: ^0.16.27
+    version: registry.npmjs.org/katex@0.16.27
   marked:
     specifier: ^17.0.1
     version: registry.npmjs.org/marked@17.0.1
@@ -65,12 +68,24 @@ dependencies:
   react-markdown:
     specifier: ^10.1.0
     version: registry.npmjs.org/react-markdown@10.1.0(@types/react@18.3.27)(react@18.3.1)
+  rehype-katex:
+    specifier: ^7.0.1
+    version: registry.npmjs.org/rehype-katex@7.0.1
   rehype-raw:
     specifier: ^7.0.0
     version: registry.npmjs.org/rehype-raw@7.0.0
+  rehype-rewrite:
+    specifier: ^4.0.4
+    version: registry.npmjs.org/rehype-rewrite@4.0.4
+  rehype-sanitize:
+    specifier: ^6.0.0
+    version: registry.npmjs.org/rehype-sanitize@6.0.0
   remark-gfm:
     specifier: ^4.0.1
     version: registry.npmjs.org/remark-gfm@4.0.1
+  remark-math:
+    specifier: ^6.0.0
+    version: registry.npmjs.org/remark-math@6.0.0
 
 devDependencies:
   '@types/react':
@@ -4126,6 +4141,12 @@ packages:
     resolution: {integrity: sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==, tarball: https://registry.npmjs.org/@types/json-schema/-/json-schema-7.0.15.tgz}
     name: '@types/json-schema'
     version: 7.0.15
+    dev: false
+
+  registry.npmjs.org/@types/katex@0.16.8:
+    resolution: {integrity: sha512-trgaNyfU+Xh2Tc+ABIb44a5AYUpicB3uwirOioeOkNPPbmgRNtcWyDeeFRzjPZENO9Vq8gvVqfhaaXWLlevVwg==, tarball: https://registry.npmjs.org/@types/katex/-/katex-0.16.8.tgz}
+    name: '@types/katex'
+    version: 0.16.8
     dev: false
 
   registry.npmjs.org/@types/mdast@4.0.4:
@@ -9708,6 +9729,27 @@ packages:
       function-bind: registry.npmjs.org/function-bind@1.1.2
     dev: false
 
+  registry.npmjs.org/hast-util-from-dom@5.0.1:
+    resolution: {integrity: sha512-N+LqofjR2zuzTjCPzyDUdSshy4Ma6li7p/c3pA78uTwzFgENbgbUrm2ugwsOdcjI1muO+o6Dgzp9p8WHtn/39Q==, tarball: https://registry.npmjs.org/hast-util-from-dom/-/hast-util-from-dom-5.0.1.tgz}
+    name: hast-util-from-dom
+    version: 5.0.1
+    dependencies:
+      '@types/hast': registry.npmjs.org/@types/hast@3.0.4
+      hastscript: registry.npmjs.org/hastscript@9.0.1
+      web-namespaces: registry.npmjs.org/web-namespaces@2.0.1
+    dev: false
+
+  registry.npmjs.org/hast-util-from-html-isomorphic@2.0.0:
+    resolution: {integrity: sha512-zJfpXq44yff2hmE0XmwEOzdWin5xwH+QIhMLOScpX91e/NSGPsAzNCvLQDIEPyO2TXi+lBmU6hjLIhV8MwP2kw==, tarball: https://registry.npmjs.org/hast-util-from-html-isomorphic/-/hast-util-from-html-isomorphic-2.0.0.tgz}
+    name: hast-util-from-html-isomorphic
+    version: 2.0.0
+    dependencies:
+      '@types/hast': registry.npmjs.org/@types/hast@3.0.4
+      hast-util-from-dom: registry.npmjs.org/hast-util-from-dom@5.0.1
+      hast-util-from-html: registry.npmjs.org/hast-util-from-html@2.0.3
+      unist-util-remove-position: registry.npmjs.org/unist-util-remove-position@5.0.0
+    dev: false
+
   registry.npmjs.org/hast-util-from-html@2.0.3:
     resolution: {integrity: sha512-CUSRHXyKjzHov8yKsQjGOElXy/3EKpyX56ELnkHH34vDVw1N1XSQ1ZcAvTyAPtGqLTuKP/uxM+aLkSPqF/EtMw==, tarball: https://registry.npmjs.org/hast-util-from-html/-/hast-util-from-html-2.0.3.tgz}
     name: hast-util-from-html
@@ -9796,6 +9838,16 @@ packages:
       zwitch: registry.npmjs.org/zwitch@2.0.4
     dev: false
 
+  registry.npmjs.org/hast-util-sanitize@5.0.2:
+    resolution: {integrity: sha512-3yTWghByc50aGS7JlGhk61SPenfE/p1oaFeNwkOOyrscaOkMGrcW9+Cy/QAIOBpZxP1yqDIzFMR0+Np0i0+usg==, tarball: https://registry.npmjs.org/hast-util-sanitize/-/hast-util-sanitize-5.0.2.tgz}
+    name: hast-util-sanitize
+    version: 5.0.2
+    dependencies:
+      '@types/hast': registry.npmjs.org/@types/hast@3.0.4
+      '@ungap/structured-clone': registry.npmjs.org/@ungap/structured-clone@1.3.0
+      unist-util-position: registry.npmjs.org/unist-util-position@5.0.0
+    dev: false
+
   registry.npmjs.org/hast-util-select@6.0.4:
     resolution: {integrity: sha512-RqGS1ZgI0MwxLaKLDxjprynNzINEkRHY2i8ln4DDjgv9ZhcYVIHN9rlpiYsqtFwrgpYU361SyWDQcGNIBVu3lw==, tarball: https://registry.npmjs.org/hast-util-select/-/hast-util-select-6.0.4.tgz}
     name: hast-util-select
@@ -9880,6 +9932,17 @@ packages:
     version: 3.0.1
     dependencies:
       '@types/hast': registry.npmjs.org/@types/hast@3.0.4
+    dev: false
+
+  registry.npmjs.org/hast-util-to-text@4.0.2:
+    resolution: {integrity: sha512-KK6y/BN8lbaq654j7JgBydev7wuNMcID54lkRav1P0CaE1e47P72AWWPiGKXTJU271ooYzcvTAn/Zt0REnvc7A==, tarball: https://registry.npmjs.org/hast-util-to-text/-/hast-util-to-text-4.0.2.tgz}
+    name: hast-util-to-text
+    version: 4.0.2
+    dependencies:
+      '@types/hast': registry.npmjs.org/@types/hast@3.0.4
+      '@types/unist': registry.npmjs.org/@types/unist@3.0.3
+      hast-util-is-element: registry.npmjs.org/hast-util-is-element@3.0.0
+      unist-util-find-after: registry.npmjs.org/unist-util-find-after@5.0.0
     dev: false
 
   registry.npmjs.org/hast-util-whitespace@3.0.0:
@@ -11132,6 +11195,15 @@ packages:
       object.values: registry.npmjs.org/object.values@1.2.1
     dev: false
 
+  registry.npmjs.org/katex@0.16.27:
+    resolution: {integrity: sha512-aeQoDkuRWSqQN6nSvVCEFvfXdqo1OQiCmmW1kc9xSdjutPv7BGO7pqY9sQRJpMOGrEdfDgF2TfRXe5eUAD2Waw==, tarball: https://registry.npmjs.org/katex/-/katex-0.16.27.tgz}
+    name: katex
+    version: 0.16.27
+    hasBin: true
+    dependencies:
+      commander: registry.npmjs.org/commander@8.3.0
+    dev: false
+
   registry.npmjs.org/keyv@4.5.4:
     resolution: {integrity: sha512-oxVHkHR/EJf2CNXnWxRLW6mg7JyCCUcG0DtEGmL2ctUo1PNTin1PUil+r/+4r5MpVgC/fn1kjsx7mjSujKqIpw==, tarball: https://registry.npmjs.org/keyv/-/keyv-4.5.4.tgz}
     name: keyv
@@ -11778,6 +11850,22 @@ packages:
       - supports-color
     dev: false
 
+  registry.npmjs.org/mdast-util-math@3.0.0:
+    resolution: {integrity: sha512-Tl9GBNeG/AhJnQM221bJR2HPvLOSnLE/T9cJI9tlc6zwQk2nPk/4f0cHkOdEixQPC/j8UtKDdITswvLAy1OZ1w==, tarball: https://registry.npmjs.org/mdast-util-math/-/mdast-util-math-3.0.0.tgz}
+    name: mdast-util-math
+    version: 3.0.0
+    dependencies:
+      '@types/hast': registry.npmjs.org/@types/hast@3.0.4
+      '@types/mdast': registry.npmjs.org/@types/mdast@4.0.4
+      devlop: registry.npmjs.org/devlop@1.1.0
+      longest-streak: registry.npmjs.org/longest-streak@3.1.0
+      mdast-util-from-markdown: registry.npmjs.org/mdast-util-from-markdown@2.0.2
+      mdast-util-to-markdown: registry.npmjs.org/mdast-util-to-markdown@2.1.2
+      unist-util-remove-position: registry.npmjs.org/unist-util-remove-position@5.0.0
+    transitivePeerDependencies:
+      - supports-color
+    dev: false
+
   registry.npmjs.org/mdast-util-mdx-expression@2.0.1:
     resolution: {integrity: sha512-J6f+9hUp+ldTZqKRSg7Vw5V6MqjATc+3E4gf3CFNcuZNWD8XdyI6zQ8GqH7f8169MM6P7hMBRDVGnn7oHB9kXQ==, tarball: https://registry.npmjs.org/mdast-util-mdx-expression/-/mdast-util-mdx-expression-2.0.1.tgz}
     name: mdast-util-mdx-expression
@@ -12051,6 +12139,20 @@ packages:
       micromark-extension-gfm-tagfilter: registry.npmjs.org/micromark-extension-gfm-tagfilter@2.0.0
       micromark-extension-gfm-task-list-item: registry.npmjs.org/micromark-extension-gfm-task-list-item@2.1.0
       micromark-util-combine-extensions: registry.npmjs.org/micromark-util-combine-extensions@2.0.1
+      micromark-util-types: registry.npmjs.org/micromark-util-types@2.0.2
+    dev: false
+
+  registry.npmjs.org/micromark-extension-math@3.1.0:
+    resolution: {integrity: sha512-lvEqd+fHjATVs+2v/8kg9i5Q0AP2k85H0WUOwpIVvUML8BapsMvh1XAogmQjOCsLpoKRCVQqEkQBB3NhVBcsOg==, tarball: https://registry.npmjs.org/micromark-extension-math/-/micromark-extension-math-3.1.0.tgz}
+    name: micromark-extension-math
+    version: 3.1.0
+    dependencies:
+      '@types/katex': registry.npmjs.org/@types/katex@0.16.8
+      devlop: registry.npmjs.org/devlop@1.1.0
+      katex: registry.npmjs.org/katex@0.16.27
+      micromark-factory-space: registry.npmjs.org/micromark-factory-space@2.0.1
+      micromark-util-character: registry.npmjs.org/micromark-util-character@2.1.1
+      micromark-util-symbol: registry.npmjs.org/micromark-util-symbol@2.0.1
       micromark-util-types: registry.npmjs.org/micromark-util-types@2.0.2
     dev: false
 
@@ -15841,6 +15943,20 @@ packages:
       unist-util-visit: registry.npmjs.org/unist-util-visit@5.0.0
     dev: false
 
+  registry.npmjs.org/rehype-katex@7.0.1:
+    resolution: {integrity: sha512-OiM2wrZ/wuhKkigASodFoo8wimG3H12LWQaH8qSPVJn9apWKFSH3YOCtbKpBorTVw/eI7cuT21XBbvwEswbIOA==, tarball: https://registry.npmjs.org/rehype-katex/-/rehype-katex-7.0.1.tgz}
+    name: rehype-katex
+    version: 7.0.1
+    dependencies:
+      '@types/hast': registry.npmjs.org/@types/hast@3.0.4
+      '@types/katex': registry.npmjs.org/@types/katex@0.16.8
+      hast-util-from-html-isomorphic: registry.npmjs.org/hast-util-from-html-isomorphic@2.0.0
+      hast-util-to-text: registry.npmjs.org/hast-util-to-text@4.0.2
+      katex: registry.npmjs.org/katex@0.16.27
+      unist-util-visit-parents: registry.npmjs.org/unist-util-visit-parents@6.0.2
+      vfile: registry.npmjs.org/vfile@6.0.3
+    dev: false
+
   registry.npmjs.org/rehype-parse@9.0.1:
     resolution: {integrity: sha512-ksCzCD0Fgfh7trPDxr2rSylbwq9iYDkSn8TCDmEJ49ljEUBxDVCzCHv7QNzZOfODanX4+bWQ4WZqLCRWYLfhag==, tarball: https://registry.npmjs.org/rehype-parse/-/rehype-parse-9.0.1.tgz}
     name: rehype-parse
@@ -15896,6 +16012,15 @@ packages:
       hast-util-select: registry.npmjs.org/hast-util-select@6.0.4
       unified: registry.npmjs.org/unified@11.0.5
       unist-util-visit: registry.npmjs.org/unist-util-visit@5.0.0
+    dev: false
+
+  registry.npmjs.org/rehype-sanitize@6.0.0:
+    resolution: {integrity: sha512-CsnhKNsyI8Tub6L4sm5ZFsme4puGfc6pYylvXo1AeqaGbjOYyzNv3qZPwvs0oMJ39eryyeOdmxwUIo94IpEhqg==, tarball: https://registry.npmjs.org/rehype-sanitize/-/rehype-sanitize-6.0.0.tgz}
+    name: rehype-sanitize
+    version: 6.0.0
+    dependencies:
+      '@types/hast': registry.npmjs.org/@types/hast@3.0.4
+      hast-util-sanitize: registry.npmjs.org/hast-util-sanitize@5.0.2
     dev: false
 
   registry.npmjs.org/rehype-slug@6.0.0:
@@ -15960,6 +16085,19 @@ packages:
     engines: {node: '>=16'}
     dependencies:
       unist-util-visit: registry.npmjs.org/unist-util-visit@5.0.0
+    dev: false
+
+  registry.npmjs.org/remark-math@6.0.0:
+    resolution: {integrity: sha512-MMqgnP74Igy+S3WwnhQ7kqGlEerTETXMvJhrUzDikVZ2/uogJCb+WHUg97hK9/jcfc0dkD73s3LN8zU49cTEtA==, tarball: https://registry.npmjs.org/remark-math/-/remark-math-6.0.0.tgz}
+    name: remark-math
+    version: 6.0.0
+    dependencies:
+      '@types/mdast': registry.npmjs.org/@types/mdast@4.0.4
+      mdast-util-math: registry.npmjs.org/mdast-util-math@3.0.0
+      micromark-extension-math: registry.npmjs.org/micromark-extension-math@3.1.0
+      unified: registry.npmjs.org/unified@11.0.5
+    transitivePeerDependencies:
+      - supports-color
     dev: false
 
   registry.npmjs.org/remark-parse@11.0.0:
@@ -17869,6 +18007,15 @@ packages:
       unist-util-visit-parents: registry.npmjs.org/unist-util-visit-parents@6.0.2
     dev: false
 
+  registry.npmjs.org/unist-util-find-after@5.0.0:
+    resolution: {integrity: sha512-amQa0Ep2m6hE2g72AugUItjbuM8X8cGQnFoHk0pGfrFeT9GZhzN5SW8nRsiGKK7Aif4CrACPENkA6P/Lw6fHGQ==, tarball: https://registry.npmjs.org/unist-util-find-after/-/unist-util-find-after-5.0.0.tgz}
+    name: unist-util-find-after
+    version: 5.0.0
+    dependencies:
+      '@types/unist': registry.npmjs.org/@types/unist@3.0.3
+      unist-util-is: registry.npmjs.org/unist-util-is@6.0.1
+    dev: false
+
   registry.npmjs.org/unist-util-is@6.0.1:
     resolution: {integrity: sha512-LsiILbtBETkDz8I9p1dQ0uyRUWuaQzd/cuEeS1hoRSyW5E5XGmTzlwY1OrNzzakGowI9Dr/I8HVaw4hTtnxy8g==, tarball: https://registry.npmjs.org/unist-util-is/-/unist-util-is-6.0.1.tgz}
     name: unist-util-is
@@ -17883,6 +18030,15 @@ packages:
     version: 5.0.0
     dependencies:
       '@types/unist': registry.npmjs.org/@types/unist@3.0.3
+    dev: false
+
+  registry.npmjs.org/unist-util-remove-position@5.0.0:
+    resolution: {integrity: sha512-Hp5Kh3wLxv0PHj9m2yZhhLt58KzPtEYKQQ4yxfYFEO7EvHwzyDYnduhHnY1mDxoqr7VUwVuHXk9RXKIiYS1N8Q==, tarball: https://registry.npmjs.org/unist-util-remove-position/-/unist-util-remove-position-5.0.0.tgz}
+    name: unist-util-remove-position
+    version: 5.0.0
+    dependencies:
+      '@types/unist': registry.npmjs.org/@types/unist@3.0.3
+      unist-util-visit: registry.npmjs.org/unist-util-visit@5.0.0
     dev: false
 
   registry.npmjs.org/unist-util-stringify-position@4.0.0:
