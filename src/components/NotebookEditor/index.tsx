@@ -59,7 +59,7 @@ const NotebookEditor: React.FC<NotebookEditorProps> = ({
   };
 
   // 结束编辑
-  const clickCell = () => {
+  const endEdit = () => {
     setEditingCellId(null);
   };
 
@@ -303,7 +303,8 @@ const NotebookEditor: React.FC<NotebookEditorProps> = ({
           isEditing={isEditing}
           onInsert={insertCell}
           onEdit={startEdit}
-          onClick={clickCell}
+          OnEditEnd={endEdit}
+          onClick={endEdit}
           onDelete={deleteCell}
           onChange={handleCellSourceChange}
         />

@@ -1,6 +1,4 @@
-@primary-color: #1677ff;
-@text-color-secondary: #494a6f;
-
+// Markdown editor
 .w-md-editor {
   .w-md-editor-toolbar {
     border-radius: 0;
@@ -13,7 +11,6 @@
       svg {
         width: 16px;
         height: 16px;
-        color: @text-color-secondary;
       }
     }
   }
@@ -33,6 +30,7 @@
   }
 }
 
+// Markdown preview
 .wmde-markdown.wmde-markdown-color {
   padding: 20px;
   overflow-y: auto;
@@ -72,4 +70,9 @@
 
 .wmde-markdown pre .copied.active {
   background: @primary-color;
+}
+
+// JupyterLab
+.jp-OutputArea {
+  padding-left: 20px;
 }

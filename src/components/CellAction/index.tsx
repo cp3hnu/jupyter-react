@@ -1,4 +1,5 @@
 import {
+  CheckOutlined,
   DeleteOutlined,
   EditOutlined,
   PlayCircleOutlined,
@@ -11,6 +12,7 @@ export type InsertPosition = 'before' | 'after';
 
 export interface CellActionProps {
   type: CellType;
+  isEditing?: boolean;
   isExecuting?: boolean;
   onExecute?: () => void;
   onInsert?: (type: CellType, position: InsertPosition) => void;
@@ -20,6 +22,7 @@ export interface CellActionProps {
 
 function CellAction({
   type,
+  isEditing,
   isExecuting,
   onExecute,
   onInsert,
@@ -28,7 +31,7 @@ function CellAction({
 }: CellActionProps) {
   return (
     <div className={styles.cellActions}>
-      {type === 'code' && (
+      {type === 'code' ? (
         <Button
           type="text"
           size="small"
@@ -40,15 +43,23 @@ function CellAction({
         >
           执行
         </Button>
+      ) : !isEditing ? (
+        <Button
+          type="text"
+          size="small"
+          icon={<EditOutlined />}
+          onClick={onEdit}
+          title="编辑（或双击单元格）"
+        ></Button>
+      ) : (
+        <Button
+          type="text"
+          size="small"
+          icon={<CheckOutlined />}
+          onClick={onEdit}
+          title="结束编辑"
+        ></Button>
       )}
-
-      <Button
-        type="text"
-        size="small"
-        icon={<EditOutlined />}
-        onClick={onEdit}
-        title="编辑（或双击单元格）"
-      ></Button>
 
       <Button
         type="text"

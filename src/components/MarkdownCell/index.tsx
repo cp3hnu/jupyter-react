@@ -15,6 +15,7 @@ type MarkdownCellProps = {
   isEditing: boolean;
   onInsert?: (id: string, type: CellType, position: InsertPosition) => void;
   onEdit?: (id: string) => void;
+  OnEditEnd?: (id: string) => void;
   onDelete?: (id: string) => void;
   onChange?: (id: string, value: string) => void;
   onClick?: (id?: string) => void;
@@ -25,6 +26,7 @@ function MarkdownCell({
   isEditing,
   onInsert,
   onEdit,
+  OnEditEnd,
   onClick,
   onDelete,
   onChange,
@@ -33,7 +35,11 @@ function MarkdownCell({
   const mdSource = Array.isArray(source) ? source.join('') : source || '';
 
   const handleEdit = () => {
-    onEdit?.(cell.id);
+    if (isEditing) {
+      OnEditEnd?.(cell.id);
+    } else {
+      onEdit?.(cell.id);
+    }
   };
 
   const handleValueChange = (value?: string) => {
@@ -52,6 +58,7 @@ function MarkdownCell({
     <div key={cell.id} className={styles.cell} data-cell-type="markdown">
       <CellToolBar
         type="markdown"
+        isEditing={isEditing}
         onInsert={handleInsert}
         onEdit={handleEdit}
         onDelete={handleDelete}

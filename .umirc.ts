@@ -9,7 +9,12 @@ export default defineConfig({
   layout: {
     title: 'Notebook',
   },
-
+  lessLoader: {
+    javascriptEnabled: true,
+    modifyVars: {
+      hack: `true; @import "@/styles/theme.less";`,
+    },
+  },
   routes: [
     {
       path: '/',
