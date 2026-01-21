@@ -3,14 +3,13 @@ import { CellType } from '@jupyterlab/nbformat';
 import MDEditor from '@uiw/react-md-editor';
 import rehypeKatex from 'rehype-katex';
 import rehypeRaw from 'rehype-raw';
-import rehypeSanitize from 'rehype-sanitize';
+// import rehypeSanitize from 'rehype-sanitize';
 import remarkGfm from 'remark-gfm';
 import remarkMath from 'remark-math';
 import { type InsertPosition } from '../CellAction';
 import CellToolBar from '../CellToolBar';
 import styles from './index.less';
 import KatexCode from './katexCode';
-
 type MarkdownCellProps = {
   cell: ZMarkdownCell;
   isEditing: boolean;
@@ -68,7 +67,7 @@ function MarkdownCell({
             style={{ maxHeight: '500px' }}
             previewOptions={{
               remarkPlugins: [remarkGfm, remarkMath],
-              rehypePlugins: [rehypeRaw, rehypeSanitize, rehypeKatex],
+              rehypePlugins: [rehypeRaw, rehypeKatex],
               components: {
                 code: KatexCode,
               },
@@ -84,7 +83,7 @@ function MarkdownCell({
           <MDEditor.Markdown
             source={mdSource}
             remarkPlugins={[remarkGfm, remarkMath]}
-            rehypePlugins={[rehypeRaw, rehypeSanitize, rehypeKatex]}
+            rehypePlugins={[rehypeRaw, rehypeKatex]}
             components={{
               code: KatexCode,
             }}

@@ -3,6 +3,8 @@ import {
   standardRendererFactories,
 } from '@jupyterlab/rendermime';
 import { IRenderMime } from '@jupyterlab/rendermime-interfaces';
+import renderMathInElement from 'katex/contrib/auto-render';
+import 'katex/dist/katex.min.css';
 import { marked } from 'marked';
 
 let rendermime: RenderMimeRegistry | null = null;
@@ -16,9 +18,25 @@ export function getRendermime() {
       },
     };
 
+    const latexTypesetter: IRenderMime.ILatexTypesetter = {
+      typeset: async (element: HTMLElement) => {
+        renderMathInElement(element, {
+          delimiters: [
+            { left: '$$', right: '$$', display: true },
+            { left: '$', right: '$', display: false },
+            { left: '\\(', right: '\\)', display: false },
+            { left: '\\[', right: '\\]', display: true },
+          ],
+          throwOnError: false,
+          strict: false,
+        });
+      },
+    };
+
     rendermime = new RenderMimeRegistry({
       initialFactories: standardRendererFactories,
       markdownParser: markdownParser,
+      latexTypesetter,
     });
   }
   return rendermime;

@@ -11,6 +11,9 @@ dependencies:
   '@ant-design/pro-components':
     specifier: ^2.4.4
     version: registry.npmjs.org/@ant-design/pro-components@2.8.10(antd@5.29.3)(rc-field-form@2.7.1)(react-dom@18.3.1)(react@18.3.1)
+  '@jupyterlab/apputils':
+    specifier: ^4.6.2
+    version: registry.npmjs.org/@jupyterlab/apputils@4.6.2
   '@jupyterlab/nbformat':
     specifier: ^4.5.1
     version: registry.npmjs.org/@jupyterlab/nbformat@4.5.1
@@ -88,6 +91,9 @@ dependencies:
     version: registry.npmjs.org/remark-math@6.0.0
 
 devDependencies:
+  '@types/katex':
+    specifier: ^0.16.8
+    version: registry.npmjs.org/@types/katex@0.16.8
   '@types/react':
     specifier: ^18.0.33
     version: registry.npmjs.org/@types/react@18.3.27
@@ -2627,7 +2633,7 @@ packages:
     version: 4.5.1
     dependencies:
       '@fortawesome/fontawesome-free': registry.npmjs.org/@fortawesome/fontawesome-free@5.15.4
-      '@jupyterlab/apputils': registry.npmjs.org/@jupyterlab/apputils@4.6.1
+      '@jupyterlab/apputils': registry.npmjs.org/@jupyterlab/apputils@4.6.2
       '@jupyterlab/coreutils': registry.npmjs.org/@jupyterlab/coreutils@6.5.1
       '@jupyterlab/docregistry': registry.npmjs.org/@jupyterlab/docregistry@4.5.1
       '@jupyterlab/rendermime': registry.npmjs.org/@jupyterlab/rendermime@4.5.1(react@18.3.1)
@@ -2652,20 +2658,20 @@ packages:
       - utf-8-validate
     dev: false
 
-  registry.npmjs.org/@jupyterlab/apputils@4.6.1:
-    resolution: {integrity: sha512-9Spqc1c36dMgHj6GGsFPKSa+l3SVPS0tIEQKF+8Gcybn+zFTbmYj0FkKRhuEuS42OpWA3jD1EqYUa2+Xo9lC5w==, tarball: https://registry.npmjs.org/@jupyterlab/apputils/-/apputils-4.6.1.tgz}
+  registry.npmjs.org/@jupyterlab/apputils@4.6.2:
+    resolution: {integrity: sha512-3QUe/Xz5jjrHOmmvSYH8pwkEfsheITUJr9/u4GD431Ufs8SaG0IsZS+vEqWLrsHur1fTCEXRVIyD4QgbMbSugA==, tarball: https://registry.npmjs.org/@jupyterlab/apputils/-/apputils-4.6.2.tgz}
     name: '@jupyterlab/apputils'
-    version: 4.6.1
+    version: 4.6.2
     dependencies:
-      '@jupyterlab/coreutils': registry.npmjs.org/@jupyterlab/coreutils@6.5.1
-      '@jupyterlab/observables': registry.npmjs.org/@jupyterlab/observables@5.5.1
-      '@jupyterlab/rendermime-interfaces': registry.npmjs.org/@jupyterlab/rendermime-interfaces@3.13.1
-      '@jupyterlab/services': registry.npmjs.org/@jupyterlab/services@7.5.1(react@18.3.1)
-      '@jupyterlab/settingregistry': registry.npmjs.org/@jupyterlab/settingregistry@4.5.1(react@18.3.1)
-      '@jupyterlab/statedb': registry.npmjs.org/@jupyterlab/statedb@4.5.1
-      '@jupyterlab/statusbar': registry.npmjs.org/@jupyterlab/statusbar@4.5.1
-      '@jupyterlab/translation': registry.npmjs.org/@jupyterlab/translation@4.5.1(react@18.3.1)
-      '@jupyterlab/ui-components': registry.npmjs.org/@jupyterlab/ui-components@4.5.1(react@18.3.1)
+      '@jupyterlab/coreutils': registry.npmjs.org/@jupyterlab/coreutils@6.5.2
+      '@jupyterlab/observables': registry.npmjs.org/@jupyterlab/observables@5.5.2
+      '@jupyterlab/rendermime-interfaces': registry.npmjs.org/@jupyterlab/rendermime-interfaces@3.13.2
+      '@jupyterlab/services': registry.npmjs.org/@jupyterlab/services@7.5.2(react@18.3.1)
+      '@jupyterlab/settingregistry': registry.npmjs.org/@jupyterlab/settingregistry@4.5.2(react@18.3.1)
+      '@jupyterlab/statedb': registry.npmjs.org/@jupyterlab/statedb@4.5.2
+      '@jupyterlab/statusbar': registry.npmjs.org/@jupyterlab/statusbar@4.5.2
+      '@jupyterlab/translation': registry.npmjs.org/@jupyterlab/translation@4.5.2(react@18.3.1)
+      '@jupyterlab/ui-components': registry.npmjs.org/@jupyterlab/ui-components@4.5.2(react@18.3.1)
       '@lumino/algorithm': registry.npmjs.org/@lumino/algorithm@2.0.4
       '@lumino/commands': registry.npmjs.org/@lumino/commands@2.3.3
       '@lumino/coreutils': registry.npmjs.org/@lumino/coreutils@2.2.2
@@ -2690,7 +2696,7 @@ packages:
     dependencies:
       '@codemirror/state': registry.npmjs.org/@codemirror/state@6.5.3
       '@jupyter/ydoc': registry.npmjs.org/@jupyter/ydoc@3.3.3
-      '@jupyterlab/apputils': registry.npmjs.org/@jupyterlab/apputils@4.6.1
+      '@jupyterlab/apputils': registry.npmjs.org/@jupyterlab/apputils@4.6.2
       '@jupyterlab/coreutils': registry.npmjs.org/@jupyterlab/coreutils@6.5.1
       '@jupyterlab/nbformat': registry.npmjs.org/@jupyterlab/nbformat@4.5.1
       '@jupyterlab/observables': registry.npmjs.org/@jupyterlab/observables@5.5.1
@@ -2722,13 +2728,26 @@ packages:
       url-parse: registry.npmjs.org/url-parse@1.5.10
     dev: false
 
+  registry.npmjs.org/@jupyterlab/coreutils@6.5.2:
+    resolution: {integrity: sha512-7hFImY0ZWFlVxmOF5wsbMQOtF8XhhYrLpk37XQEHwXFt4JhamQd/DFk9Fc6VKn/ninq1R04F4hIRXeRGXuL1uw==, tarball: https://registry.npmjs.org/@jupyterlab/coreutils/-/coreutils-6.5.2.tgz}
+    name: '@jupyterlab/coreutils'
+    version: 6.5.2
+    dependencies:
+      '@lumino/coreutils': registry.npmjs.org/@lumino/coreutils@2.2.2
+      '@lumino/disposable': registry.npmjs.org/@lumino/disposable@2.1.5
+      '@lumino/signaling': registry.npmjs.org/@lumino/signaling@2.1.5
+      minimist: registry.npmjs.org/minimist@1.2.8
+      path-browserify: registry.npmjs.org/path-browserify@1.0.1
+      url-parse: registry.npmjs.org/url-parse@1.5.10
+    dev: false
+
   registry.npmjs.org/@jupyterlab/docregistry@4.5.1:
     resolution: {integrity: sha512-xlUNB9tm7eXchHSfvdrS2HdyIwqRVFw9yVREHQ57K/5Sqkg8oDs4gYwA/tChkccaEG0Y6ql7rD4m8+Yg6zEr1g==, tarball: https://registry.npmjs.org/@jupyterlab/docregistry/-/docregistry-4.5.1.tgz}
     name: '@jupyterlab/docregistry'
     version: 4.5.1
     dependencies:
       '@jupyter/ydoc': registry.npmjs.org/@jupyter/ydoc@3.3.3
-      '@jupyterlab/apputils': registry.npmjs.org/@jupyterlab/apputils@4.6.1
+      '@jupyterlab/apputils': registry.npmjs.org/@jupyterlab/apputils@4.6.2
       '@jupyterlab/codeeditor': registry.npmjs.org/@jupyterlab/codeeditor@4.5.1
       '@jupyterlab/coreutils': registry.npmjs.org/@jupyterlab/coreutils@6.5.1
       '@jupyterlab/observables': registry.npmjs.org/@jupyterlab/observables@5.5.1
@@ -2758,10 +2777,30 @@ packages:
       '@lumino/coreutils': registry.npmjs.org/@lumino/coreutils@2.2.2
     dev: false
 
+  registry.npmjs.org/@jupyterlab/nbformat@4.5.2:
+    resolution: {integrity: sha512-1qNgz3T2FmV7cnRUmw8ApSPvlthI7nxQzXDRlpNQmQHTuGHnNJkyahqXaoO6pI5vt+5RK6jRCvME75xFdVwZ+w==, tarball: https://registry.npmjs.org/@jupyterlab/nbformat/-/nbformat-4.5.2.tgz}
+    name: '@jupyterlab/nbformat'
+    version: 4.5.2
+    dependencies:
+      '@lumino/coreutils': registry.npmjs.org/@lumino/coreutils@2.2.2
+    dev: false
+
   registry.npmjs.org/@jupyterlab/observables@5.5.1:
     resolution: {integrity: sha512-OG/2M1ndW1QtBsNCiLvFClqFzJjilLnp1nyrdhOfG6EUCC/wQ7ac0Hr/Z+Z5vCKQ1Uy+zsdyqO8RBtLST/W9EA==, tarball: https://registry.npmjs.org/@jupyterlab/observables/-/observables-5.5.1.tgz}
     name: '@jupyterlab/observables'
     version: 5.5.1
+    dependencies:
+      '@lumino/algorithm': registry.npmjs.org/@lumino/algorithm@2.0.4
+      '@lumino/coreutils': registry.npmjs.org/@lumino/coreutils@2.2.2
+      '@lumino/disposable': registry.npmjs.org/@lumino/disposable@2.1.5
+      '@lumino/messaging': registry.npmjs.org/@lumino/messaging@2.0.4
+      '@lumino/signaling': registry.npmjs.org/@lumino/signaling@2.1.5
+    dev: false
+
+  registry.npmjs.org/@jupyterlab/observables@5.5.2:
+    resolution: {integrity: sha512-iKHRjMdJ4xuzBYwoL8BpUCiNUortsJ+n6OVqrgG4QMhi62CDGJ5/+PGNF45EOCPKKFC4RzMbBYPi72RwYJyTUA==, tarball: https://registry.npmjs.org/@jupyterlab/observables/-/observables-5.5.2.tgz}
+    name: '@jupyterlab/observables'
+    version: 5.5.2
     dependencies:
       '@lumino/algorithm': registry.npmjs.org/@lumino/algorithm@2.0.4
       '@lumino/coreutils': registry.npmjs.org/@lumino/coreutils@2.2.2
@@ -2776,7 +2815,7 @@ packages:
     name: '@jupyterlab/outputarea'
     version: 4.5.1
     dependencies:
-      '@jupyterlab/apputils': registry.npmjs.org/@jupyterlab/apputils@4.6.1
+      '@jupyterlab/apputils': registry.npmjs.org/@jupyterlab/apputils@4.6.2
       '@jupyterlab/nbformat': registry.npmjs.org/@jupyterlab/nbformat@4.5.1
       '@jupyterlab/observables': registry.npmjs.org/@jupyterlab/observables@5.5.1
       '@jupyterlab/rendermime': registry.npmjs.org/@jupyterlab/rendermime@4.5.1(react@18.3.1)
@@ -2805,13 +2844,22 @@ packages:
       '@lumino/widgets': registry.npmjs.org/@lumino/widgets@2.7.2
     dev: false
 
+  registry.npmjs.org/@jupyterlab/rendermime-interfaces@3.13.2:
+    resolution: {integrity: sha512-Ce7ODjruzjuBFRo8DBgDl52M7djr8CRJRjilU3M++U87T4WYe87gicZtRXfQEN00lJ8T9DiSvzmVj0aVlOsG0g==, tarball: https://registry.npmjs.org/@jupyterlab/rendermime-interfaces/-/rendermime-interfaces-3.13.2.tgz}
+    name: '@jupyterlab/rendermime-interfaces'
+    version: 3.13.2
+    dependencies:
+      '@lumino/coreutils': registry.npmjs.org/@lumino/coreutils@2.2.2
+      '@lumino/widgets': registry.npmjs.org/@lumino/widgets@2.7.2
+    dev: false
+
   registry.npmjs.org/@jupyterlab/rendermime@4.5.1(react@18.3.1):
     resolution: {integrity: sha512-vy6MTCKUlq95RQIsVYbS4ElcES9jc4I8LIt60WgjOgK5tdVYjQWEn83SefFrZPiu9aQojQrbFX4dF/rLTRCFVA==, tarball: https://registry.npmjs.org/@jupyterlab/rendermime/-/rendermime-4.5.1.tgz}
     id: registry.npmjs.org/@jupyterlab/rendermime/4.5.1
     name: '@jupyterlab/rendermime'
     version: 4.5.1
     dependencies:
-      '@jupyterlab/apputils': registry.npmjs.org/@jupyterlab/apputils@4.6.1
+      '@jupyterlab/apputils': registry.npmjs.org/@jupyterlab/apputils@4.6.2
       '@jupyterlab/coreutils': registry.npmjs.org/@jupyterlab/coreutils@6.5.1
       '@jupyterlab/nbformat': registry.npmjs.org/@jupyterlab/nbformat@4.5.1
       '@jupyterlab/observables': registry.npmjs.org/@jupyterlab/observables@5.5.1
@@ -2852,6 +2900,29 @@ packages:
       - utf-8-validate
     dev: false
 
+  registry.npmjs.org/@jupyterlab/services@7.5.2(react@18.3.1):
+    resolution: {integrity: sha512-sx2MWF6atbz1ENRFHSnDuzx7XtOHoSZsFNjYJ+F6MwtyZPQAwPauoPyoIkXa5uP71paXcgnev0y1lUhPFFniqA==, tarball: https://registry.npmjs.org/@jupyterlab/services/-/services-7.5.2.tgz}
+    id: registry.npmjs.org/@jupyterlab/services/7.5.2
+    name: '@jupyterlab/services'
+    version: 7.5.2
+    dependencies:
+      '@jupyter/ydoc': registry.npmjs.org/@jupyter/ydoc@3.3.3
+      '@jupyterlab/coreutils': registry.npmjs.org/@jupyterlab/coreutils@6.5.2
+      '@jupyterlab/nbformat': registry.npmjs.org/@jupyterlab/nbformat@4.5.2
+      '@jupyterlab/settingregistry': registry.npmjs.org/@jupyterlab/settingregistry@4.5.2(react@18.3.1)
+      '@jupyterlab/statedb': registry.npmjs.org/@jupyterlab/statedb@4.5.2
+      '@lumino/coreutils': registry.npmjs.org/@lumino/coreutils@2.2.2
+      '@lumino/disposable': registry.npmjs.org/@lumino/disposable@2.1.5
+      '@lumino/polling': registry.npmjs.org/@lumino/polling@2.1.5
+      '@lumino/properties': registry.npmjs.org/@lumino/properties@2.0.4
+      '@lumino/signaling': registry.npmjs.org/@lumino/signaling@2.1.5
+      ws: registry.npmjs.org/ws@8.18.3
+    transitivePeerDependencies:
+      - bufferutil
+      - react
+      - utf-8-validate
+    dev: false
+
   registry.npmjs.org/@jupyterlab/settingregistry@4.5.1(react@18.3.1):
     resolution: {integrity: sha512-3yJ2LUFMI32xV+sRmLAO4ooXUZPbHFkmivTn7dlJqAKO1XCgJJ3OtcEsXefIszTrjA+yj0Th15NL6vSGFgSTAQ==, tarball: https://registry.npmjs.org/@jupyterlab/settingregistry/-/settingregistry-4.5.1.tgz}
     id: registry.npmjs.org/@jupyterlab/settingregistry/4.5.1
@@ -2872,10 +2943,42 @@ packages:
       react: registry.npmjs.org/react@18.3.1
     dev: false
 
+  registry.npmjs.org/@jupyterlab/settingregistry@4.5.2(react@18.3.1):
+    resolution: {integrity: sha512-xH2CZTvA8FH+HMF3YNt9MdDpQcL6df4hTErJa0/kKpYJNaG1Lny4uDB7o5Gorxho41aLs9qGG4d+ef2NnL/yRg==, tarball: https://registry.npmjs.org/@jupyterlab/settingregistry/-/settingregistry-4.5.2.tgz}
+    id: registry.npmjs.org/@jupyterlab/settingregistry/4.5.2
+    name: '@jupyterlab/settingregistry'
+    version: 4.5.2
+    peerDependencies:
+      react: '>=16'
+    dependencies:
+      '@jupyterlab/nbformat': registry.npmjs.org/@jupyterlab/nbformat@4.5.2
+      '@jupyterlab/statedb': registry.npmjs.org/@jupyterlab/statedb@4.5.2
+      '@lumino/commands': registry.npmjs.org/@lumino/commands@2.3.3
+      '@lumino/coreutils': registry.npmjs.org/@lumino/coreutils@2.2.2
+      '@lumino/disposable': registry.npmjs.org/@lumino/disposable@2.1.5
+      '@lumino/signaling': registry.npmjs.org/@lumino/signaling@2.1.5
+      '@rjsf/utils': registry.npmjs.org/@rjsf/utils@5.24.13(react@18.3.1)
+      ajv: registry.npmjs.org/ajv@8.17.1
+      json5: registry.npmjs.org/json5@2.2.3
+      react: registry.npmjs.org/react@18.3.1
+    dev: false
+
   registry.npmjs.org/@jupyterlab/statedb@4.5.1:
     resolution: {integrity: sha512-hyvts9YWOB5UeMWAJ8JJCtLs2mNLvverQUC1lSCENmmIP89lAql/HGE9IJJXb6z+GS8eP9hZVaeC3LheFU51rw==, tarball: https://registry.npmjs.org/@jupyterlab/statedb/-/statedb-4.5.1.tgz}
     name: '@jupyterlab/statedb'
     version: 4.5.1
+    dependencies:
+      '@lumino/commands': registry.npmjs.org/@lumino/commands@2.3.3
+      '@lumino/coreutils': registry.npmjs.org/@lumino/coreutils@2.2.2
+      '@lumino/disposable': registry.npmjs.org/@lumino/disposable@2.1.5
+      '@lumino/properties': registry.npmjs.org/@lumino/properties@2.0.4
+      '@lumino/signaling': registry.npmjs.org/@lumino/signaling@2.1.5
+    dev: false
+
+  registry.npmjs.org/@jupyterlab/statedb@4.5.2:
+    resolution: {integrity: sha512-lWTxUhCA10Fbk5FP708ORnDYi8BYb9NI/iOn/DjwFwsYE3sUphTYR4c/ycu20EJzWXdRxisPKYVS4yuIhystow==, tarball: https://registry.npmjs.org/@jupyterlab/statedb/-/statedb-4.5.2.tgz}
+    name: '@jupyterlab/statedb'
+    version: 4.5.2
     dependencies:
       '@lumino/commands': registry.npmjs.org/@lumino/commands@2.3.3
       '@lumino/coreutils': registry.npmjs.org/@lumino/coreutils@2.2.2
@@ -2902,6 +3005,24 @@ packages:
       - utf-8-validate
     dev: false
 
+  registry.npmjs.org/@jupyterlab/statusbar@4.5.2:
+    resolution: {integrity: sha512-cC1EBBPvPoHV7wyO1I3z0J3su9HOSrh9uuQqwAARJeW9bDaaMps4K50tEfCubgddNaLGo8QUrtfa+OXnJuwGxg==, tarball: https://registry.npmjs.org/@jupyterlab/statusbar/-/statusbar-4.5.2.tgz}
+    name: '@jupyterlab/statusbar'
+    version: 4.5.2
+    dependencies:
+      '@jupyterlab/ui-components': registry.npmjs.org/@jupyterlab/ui-components@4.5.2(react@18.3.1)
+      '@lumino/algorithm': registry.npmjs.org/@lumino/algorithm@2.0.4
+      '@lumino/coreutils': registry.npmjs.org/@lumino/coreutils@2.2.2
+      '@lumino/disposable': registry.npmjs.org/@lumino/disposable@2.1.5
+      '@lumino/messaging': registry.npmjs.org/@lumino/messaging@2.0.4
+      '@lumino/signaling': registry.npmjs.org/@lumino/signaling@2.1.5
+      '@lumino/widgets': registry.npmjs.org/@lumino/widgets@2.7.2
+      react: registry.npmjs.org/react@18.3.1
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
+    dev: false
+
   registry.npmjs.org/@jupyterlab/theme-light-extension@4.5.1(react@18.3.1):
     resolution: {integrity: sha512-cnCe+XRxnuotNl/3/aVkt7IZvduDCCIr+c2pcRVNzm8SjVH/5du/LsrCnmZma+qXhOp+Rattpj2Nsrh5Q7aYYA==, tarball: https://registry.npmjs.org/@jupyterlab/theme-light-extension/-/theme-light-extension-4.5.1.tgz}
     id: registry.npmjs.org/@jupyterlab/theme-light-extension/4.5.1
@@ -2909,7 +3030,7 @@ packages:
     version: 4.5.1
     dependencies:
       '@jupyterlab/application': registry.npmjs.org/@jupyterlab/application@4.5.1(react@18.3.1)
-      '@jupyterlab/apputils': registry.npmjs.org/@jupyterlab/apputils@4.6.1
+      '@jupyterlab/apputils': registry.npmjs.org/@jupyterlab/apputils@4.6.2
       '@jupyterlab/translation': registry.npmjs.org/@jupyterlab/translation@4.5.1(react@18.3.1)
     transitivePeerDependencies:
       - bufferutil
@@ -2934,6 +3055,23 @@ packages:
       - utf-8-validate
     dev: false
 
+  registry.npmjs.org/@jupyterlab/translation@4.5.2(react@18.3.1):
+    resolution: {integrity: sha512-SAcGZQu146VbYffNl4uGwOPyNGwgJZJsgXJGTu+6OVree75L5L7gLEApurksSprJJRjAjP670pgZ8QoXCQ92IA==, tarball: https://registry.npmjs.org/@jupyterlab/translation/-/translation-4.5.2.tgz}
+    id: registry.npmjs.org/@jupyterlab/translation/4.5.2
+    name: '@jupyterlab/translation'
+    version: 4.5.2
+    dependencies:
+      '@jupyterlab/coreutils': registry.npmjs.org/@jupyterlab/coreutils@6.5.2
+      '@jupyterlab/rendermime-interfaces': registry.npmjs.org/@jupyterlab/rendermime-interfaces@3.13.2
+      '@jupyterlab/services': registry.npmjs.org/@jupyterlab/services@7.5.2(react@18.3.1)
+      '@jupyterlab/statedb': registry.npmjs.org/@jupyterlab/statedb@4.5.2
+      '@lumino/coreutils': registry.npmjs.org/@lumino/coreutils@2.2.2
+    transitivePeerDependencies:
+      - bufferutil
+      - react
+      - utf-8-validate
+    dev: false
+
   registry.npmjs.org/@jupyterlab/ui-components@4.5.1(react@18.3.1):
     resolution: {integrity: sha512-rH7CtspOnGllJJXHZihuasXPMiQrtommZw7AW6m5lzaMWl2TC74LaMdOSebFHhh9no+7GSZRSua9engZywVTpQ==, tarball: https://registry.npmjs.org/@jupyterlab/ui-components/-/ui-components-4.5.1.tgz}
     id: registry.npmjs.org/@jupyterlab/ui-components/4.5.1
@@ -2948,6 +3086,40 @@ packages:
       '@jupyterlab/observables': registry.npmjs.org/@jupyterlab/observables@5.5.1
       '@jupyterlab/rendermime-interfaces': registry.npmjs.org/@jupyterlab/rendermime-interfaces@3.13.1
       '@jupyterlab/translation': registry.npmjs.org/@jupyterlab/translation@4.5.1(react@18.3.1)
+      '@lumino/algorithm': registry.npmjs.org/@lumino/algorithm@2.0.4
+      '@lumino/commands': registry.npmjs.org/@lumino/commands@2.3.3
+      '@lumino/coreutils': registry.npmjs.org/@lumino/coreutils@2.2.2
+      '@lumino/disposable': registry.npmjs.org/@lumino/disposable@2.1.5
+      '@lumino/messaging': registry.npmjs.org/@lumino/messaging@2.0.4
+      '@lumino/polling': registry.npmjs.org/@lumino/polling@2.1.5
+      '@lumino/properties': registry.npmjs.org/@lumino/properties@2.0.4
+      '@lumino/signaling': registry.npmjs.org/@lumino/signaling@2.1.5
+      '@lumino/virtualdom': registry.npmjs.org/@lumino/virtualdom@2.0.4
+      '@lumino/widgets': registry.npmjs.org/@lumino/widgets@2.7.2
+      '@rjsf/core': registry.npmjs.org/@rjsf/core@5.24.13(@rjsf/utils@5.24.13)(react@18.3.1)
+      '@rjsf/utils': registry.npmjs.org/@rjsf/utils@5.24.13(react@18.3.1)
+      react: registry.npmjs.org/react@18.3.1
+      react-dom: registry.npmjs.org/react-dom@18.3.1(react@18.3.1)
+      typestyle: registry.npmjs.org/typestyle@2.4.0
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
+    dev: false
+
+  registry.npmjs.org/@jupyterlab/ui-components@4.5.2(react@18.3.1):
+    resolution: {integrity: sha512-TurwDq6rcmSaJLn9neoJP0i2ikMYSQm+rJ/qhs5nNsEaH2G3bcKMwLaQk9XEQb0y8PC0ztq5zJ+4kDZQqrNRng==, tarball: https://registry.npmjs.org/@jupyterlab/ui-components/-/ui-components-4.5.2.tgz}
+    id: registry.npmjs.org/@jupyterlab/ui-components/4.5.2
+    name: '@jupyterlab/ui-components'
+    version: 4.5.2
+    peerDependencies:
+      react: ^18.2.0
+    dependencies:
+      '@jupyter/react-components': registry.npmjs.org/@jupyter/react-components@0.16.7
+      '@jupyter/web-components': registry.npmjs.org/@jupyter/web-components@0.16.7
+      '@jupyterlab/coreutils': registry.npmjs.org/@jupyterlab/coreutils@6.5.2
+      '@jupyterlab/observables': registry.npmjs.org/@jupyterlab/observables@5.5.2
+      '@jupyterlab/rendermime-interfaces': registry.npmjs.org/@jupyterlab/rendermime-interfaces@3.13.2
+      '@jupyterlab/translation': registry.npmjs.org/@jupyterlab/translation@4.5.2(react@18.3.1)
       '@lumino/algorithm': registry.npmjs.org/@lumino/algorithm@2.0.4
       '@lumino/commands': registry.npmjs.org/@lumino/commands@2.3.3
       '@lumino/coreutils': registry.npmjs.org/@lumino/coreutils@2.2.2
@@ -4147,7 +4319,6 @@ packages:
     resolution: {integrity: sha512-trgaNyfU+Xh2Tc+ABIb44a5AYUpicB3uwirOioeOkNPPbmgRNtcWyDeeFRzjPZENO9Vq8gvVqfhaaXWLlevVwg==, tarball: https://registry.npmjs.org/@types/katex/-/katex-0.16.8.tgz}
     name: '@types/katex'
     version: 0.16.8
-    dev: false
 
   registry.npmjs.org/@types/mdast@4.0.4:
     resolution: {integrity: sha512-kGaNbPh1k7AFzgpud/gMdvIm5xuECykRR+JnWKQno9TAXVa6WIVCGTPvYGekIDL4uwCZQSYbUxNBSb1aUo79oA==, tarball: https://registry.npmjs.org/@types/mdast/-/mdast-4.0.4.tgz}
