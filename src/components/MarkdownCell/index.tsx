@@ -4,12 +4,15 @@ import MDEditor from '@uiw/react-md-editor';
 import rehypeKatex from 'rehype-katex';
 import rehypeRaw from 'rehype-raw';
 // import rehypeSanitize from 'rehype-sanitize';
+import { fullscreen, getCommands } from '@uiw/react-md-editor/commands-cn';
 import remarkGfm from 'remark-gfm';
 import remarkMath from 'remark-math';
 import { type InsertPosition } from '../CellAction';
 import CellToolBar from '../CellToolBar';
+import { codePreview } from './config';
 import styles from './index.less';
 import KatexCode from './katexCode';
+
 type MarkdownCellProps = {
   cell: ZMarkdownCell;
   isEditing: boolean;
@@ -79,6 +82,11 @@ function MarkdownCell({
                 code: KatexCode,
               },
             }}
+            textareaProps={{
+              placeholder: '请输入',
+            }}
+            commands={[...getCommands()]} // 基础命令
+            extraCommands={[codePreview, fullscreen]} // 扩展命令
           ></MDEditor>
         </div>
       ) : (
