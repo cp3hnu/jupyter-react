@@ -18,7 +18,7 @@ import { Session } from '@jupyterlab/services';
 import { UUID } from '@lumino/coreutils';
 import { Button, message } from 'antd';
 import React, { useEffect, useState } from 'react';
-import CodeCell, { type InsertPosition } from '../CodeCell';
+import CodeCell, { type InsertPosition } from '../CodeCell/codeMirror';
 import MarkdownCell from '../MarkdownCell';
 import styles from './index.less';
 
