@@ -17,7 +17,7 @@ import { CellType, ICell, INotebookContent } from '@jupyterlab/nbformat';
 import { Session } from '@jupyterlab/services';
 import { UUID } from '@lumino/coreutils';
 import { Button, message } from 'antd';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import CodeCell, { type InsertPosition } from '../CodeCell/codeMirror';
 import MarkdownCell from '../MarkdownCell';
 import styles from './index.less';
@@ -44,6 +44,42 @@ const NotebookEditor: React.FC<NotebookEditorProps> = ({
   const [showServerDialog, setShowServerDialog] = useState(false);
   const [executingCellId, setExecutingCellId] = useState<string | null>(null);
 
+  const handlePersist = useCallback(async () => {
+    try {
+      const file = notebookPath.split('/').pop() || '';
+      if (!file.endsWith('.ipynb')) {
+        message.error('无效的文件名');
+        return;
+      }
+
+      setPersisting(true);
+      const res = await fetch(
+        `/local-api/notebooks/${encodeURIComponent(file)}`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(notebook),
+        },
+      );
+
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(text || 'Failed to save');
+      }
+
+      message.success('保存成功');
+    } catch (error) {
+      message.error(
+        '保存失败: ' +
+          (error instanceof Error ? error.message : 'Unknown error'),
+      );
+    } finally {
+      setPersisting(false);
+    }
+  }, [notebook, notebookPath]);
+
   // 清理：组件卸载时关闭会话
   useEffect(() => {
     return () => {
@@ -52,6 +88,20 @@ const NotebookEditor: React.FC<NotebookEditorProps> = ({
       }
     };
   }, [session]);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 's' && e.metaKey) {
+        e.stopPropagation();
+        e.preventDefault();
+        handlePersist();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [handlePersist]);
 
   // 开始编辑 cell
   const startEdit = (id: string) => {
@@ -252,42 +302,6 @@ const NotebookEditor: React.FC<NotebookEditorProps> = ({
       );
     } finally {
       setSaving(false);
-    }
-  };
-
-  const handlePersist = async () => {
-    try {
-      const file = notebookPath.split('/').pop() || '';
-      if (!file.endsWith('.ipynb')) {
-        message.error('无效的文件名');
-        return;
-      }
-
-      setPersisting(true);
-      const res = await fetch(
-        `/local-api/notebooks/${encodeURIComponent(file)}`,
-        {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(notebook),
-        },
-      );
-
-      if (!res.ok) {
-        const text = await res.text();
-        throw new Error(text || 'Failed to save');
-      }
-
-      message.success('保存成功');
-    } catch (error) {
-      message.error(
-        '保存失败: ' +
-          (error instanceof Error ? error.message : 'Unknown error'),
-      );
-    } finally {
-      setPersisting(false);
     }
   };
 
