@@ -1,16 +1,27 @@
 .cell {
-  margin-bottom: 0;
-  border: 1px solid #e0e0e0;
-  border-radius: 4px;
+  position: relative;
   overflow: hidden;
-  transition: border-color 0.2s;
+  padding-top: 30px;
 
-  &:hover {
-    border-color: #1890ff;
+  &__header {
+    display: none;
+    position: absolute;
+    top: 3px;
+    right: 0;
+    z-index: 100;
+    width: fit-content;
   }
-}
 
-.cellCode {
-  padding: 16px 0;
-  background-color: white;
+  &:hover &__header {
+    display: block;
+  }
+
+  &__content {
+    border: 1px solid transparent;
+    transition: border-color 0.2s;
+  }
+
+  &:hover &__content {
+    border-color: @primary-color;
+  }
 }

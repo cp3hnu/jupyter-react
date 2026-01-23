@@ -6,6 +6,7 @@ import {
 } from '@ant-design/icons';
 import { CellType } from '@jupyterlab/nbformat';
 import { Button } from 'antd';
+import classNames from 'classnames';
 import styles from './index.less';
 
 export type InsertPosition = 'before' | 'after';
@@ -18,6 +19,7 @@ export interface CellActionProps {
   onInsert?: (type: CellType, position: InsertPosition) => void;
   onEdit?: () => void;
   onDelete?: () => void;
+  className?: string;
 }
 
 function CellAction({
@@ -28,9 +30,10 @@ function CellAction({
   onInsert,
   onEdit,
   onDelete,
+  className,
 }: CellActionProps) {
   return (
-    <div className={styles.cellActions}>
+    <div className={classNames(styles['cell-action'], className)}>
       {type === 'code' ? (
         <Button
           type="text"

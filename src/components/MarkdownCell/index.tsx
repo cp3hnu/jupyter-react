@@ -7,10 +7,9 @@ import rehypeRaw from 'rehype-raw';
 import { fullscreen, getCommands } from '@uiw/react-md-editor/commands-cn';
 import remarkGfm from 'remark-gfm';
 import remarkMath from 'remark-math';
-import { type InsertPosition } from '../CellAction';
-import CellToolBar from '../CellToolBar';
+import CellAction, { type InsertPosition } from '../CellAction';
+import styles from '../CodeCell/index.less';
 import { codePreview } from './config';
-import styles from './index.less';
 import KatexCode from './katexCode';
 
 type MarkdownCellProps = {
@@ -59,22 +58,24 @@ function MarkdownCell({
 
   return (
     <div key={cell.id} className={styles.cell} data-cell-type="markdown">
-      <CellToolBar
+      <CellAction
         type="markdown"
         isEditing={isEditing}
         onInsert={handleInsert}
         onEdit={handleEdit}
         onDelete={handleDelete}
+        className={styles['cell__header']}
       />
 
       {isEditing ? (
-        <div className={styles.cellContent}>
+        <div className={styles['cell__editor']}>
           <MDEditor
             value={mdSource}
             preview="edit"
             onChange={handleValueChange}
             height={'fit-content'}
             style={{ maxHeight: '500px' }}
+            visibleDragbar={false}
             previewOptions={{
               remarkPlugins: [remarkGfm, remarkMath],
               rehypePlugins: [rehypeRaw, rehypeKatex],
@@ -91,7 +92,7 @@ function MarkdownCell({
         </div>
       ) : (
         <div
-          className={styles.cellContent}
+          className={styles['cell__content']}
           onClick={() => onClick?.(cell.id)}
           onDoubleClick={handleEdit}
         >

@@ -2,5 +2,6 @@
   "editor.fontSize": 16,
   "editor.formatOnSave": true,
   "editor.formatOnPaste": true,
-  "workbench.editor.wrapTabs": true
+  "workbench.editor.wrapTabs": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode"
 }

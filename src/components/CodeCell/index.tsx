@@ -83,7 +83,7 @@ function CodeCell({
         onDelete={handleDelete}
       />
 
-      <div className={styles.cellCode}>
+      <div className={styles['cell__editor']}>
         <Editor
           onMount={handleEditorMount}
           options={{

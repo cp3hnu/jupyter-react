@@ -10,9 +10,19 @@ const PreviewButton = () => {
     });
   };
   if (preview === 'edit') {
-    return <EyeOutlined onClick={click} style={{ marginRight: 8 }} />;
+    return (
+      <EyeOutlined
+        onClick={click}
+        style={{ marginRight: 8, verticalAlign: '-0.5px' }}
+      />
+    );
   }
-  return <EyeInvisibleOutlined onClick={click} style={{ marginRight: 8 }} />;
+  return (
+    <EyeInvisibleOutlined
+      onClick={click}
+      style={{ marginRight: 8, verticalAlign: '-0.5px' }}
+    />
+  );
 };
 
 export const codePreview = {
