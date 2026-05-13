@@ -3,5 +3,8 @@
   "editor.formatOnSave": true,
   "editor.formatOnPaste": true,
   "workbench.editor.wrapTabs": true,
-  "editor.defaultFormatter": "esbenp.prettier-vscode"
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
 }

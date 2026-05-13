@@ -10,6 +10,10 @@
 - **打开 Notebook**：点击列表条目跳转到 Notebook 页面，并通过 URL 参数加载对应文件。
 - **新建 Notebook**：通过弹框创建新的 `.ipynb` 文件并自动刷新列表。
 
+## 实现效果
+
+![result](./screenshots/result.gif)
+
 ## 路由
 
 - `/home`
